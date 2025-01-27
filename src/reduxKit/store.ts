@@ -2,8 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./reducers/auth/authSlice";
 import sellerSlice from "./reducers/auth/seller";
-
-
+ 
 export const store = configureStore({
     reducer:{
         auth:authSlice.reducer,
