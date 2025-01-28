@@ -20,6 +20,7 @@ import AddService from './components/pages/Form/AddService';
 import BrandDetail from './components/Table/BrandDetail';
 import SellerListSection from './components/pages/seller/sellerList';
 import SellerProfile from './components/Table/SellerProfile';
+import ProductData from './components/pages/product/getProduct';
 
 
 export const App: React.FC = React.memo(() => {
@@ -80,6 +81,15 @@ export const App: React.FC = React.memo(() => {
           element={
             <>
               <SubServiceForm/>
+            </>
+          }
+        />
+
+        <Route
+          path="/productdata"
+          element={
+            <>
+              <ProductData/>
             </>
           }
         />
