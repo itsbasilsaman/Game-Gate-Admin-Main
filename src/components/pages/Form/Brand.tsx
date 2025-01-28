@@ -192,6 +192,7 @@ const BrandData: React.FC = () => {
                             />
                           </svg>
                         </span>
+                        
                         <p>
                           <span className="text-primary">Click to upload</span>
                         </p>
