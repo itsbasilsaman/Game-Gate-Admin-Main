@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {   BrandProductList } from '../types/brandprouduct';
 import ProductOne from '../../images/product/product-01.png';
 import ProductTwo from '../../images/product/product-02.png';
 import ProductThree from '../../images/product/product-03.png';
 import ProductFour from '../../images/product/product-04.png';
+import { GetAllBrandAction } from '../../reduxKit/actions/auth/brand/brandAction';
+
  
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../reduxKit/store';
 
 const productData: BrandProductList[] = [
   {
@@ -40,17 +44,33 @@ const productData: BrandProductList[] = [
 
 const BrandList = () => {
   const [products, setProducts] = useState<BrandProductList[]>(productData);
+  const dispatch=useDispatch<AppDispatch>()
+  const [brands,setBrands]=useState()
    console.log(setProducts);
    
- 
- 
- 
 
- 
 
- 
 
-  
+    useEffect(() => {
+       const GetBrandList = async () => {
+         try {
+           const resultAction = await dispatch(GetAllBrandAction());
+           if (GetAllBrandAction.fulfilled.match(resultAction)) {
+            setBrands(resultAction.payload);
+           } else {
+             console.error("Failed to fetch services: ", resultAction.payload || resultAction.error);
+           }
+         } catch (error) {
+           console.error("Unexpected error while fetching services: ", error);
+         }
+       };
+       GetBrandList();
+     }, [dispatch]);
+
+
+  if(brands){
+    console.log("the brand data of fetch ***&&&", brands);
+  }
  
 
   return (

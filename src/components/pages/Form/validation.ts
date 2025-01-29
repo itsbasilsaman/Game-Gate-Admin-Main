@@ -1,25 +1,37 @@
 // Brand Validation
 export const validateBrandData = (
-    brand: string,
+    name: string,
+    nameAr:string,
     description: string,
-    image: File | null
+    descriptionAr:string,
+    image: File | null,
   ) => {
-    const errors: { brand: string; description: string; image: string } = {
-      brand: '',
+    const errors: { descriptionAr:string, name:string, nameAr: string; description: string; image: string } = {
+      name: '',
       description: '',
       image: '',
+      descriptionAr:'',
+      nameAr:''
     };
     let hasError = false;
   
     // Validate brand
-    if (!brand) {
-      errors.brand = 'Brand is required';
+    if (!name) {
+      errors.name = 'name is required';
+      hasError = true;
+    }
+    if (!nameAr) {
+      errors.name = 'nameAr is required';
       hasError = true;
     }
   
     // Validate description
     if (!description) {
       errors.description = 'Description is required';
+      hasError = true;
+    }
+    if (!descriptionAr) {
+      errors.description = 'DescriptionAr is required';
       hasError = true;
     }
   

@@ -12,7 +12,7 @@ import ECommerce from "./components/pages/Dashboard/Ecommerce";
 // import Tables from './components/pages/Table';
 
 import SubServiceForm from "./components/pages/Form/SubServiceForm";
-import BrandData from "./components/pages/Form/Brand";
+import BrandData from "./components/pages/Form/AddBrand";
 import SubService from "./components/Table/SubService";
 import SellerList from "./components/pages/seller/sellerList";
 import BrandList from "./components/Table/BrandList";
@@ -21,6 +21,7 @@ import AddService from "./components/pages/Form/AddService";
 import BrandDetail from "./components/Table/BrandDetail";
 import SellerListSection from "./components/pages/seller/sellerList";
 import SellerProfile from "./components/Table/SellerProfile";
+import ProductData from "./components/pages/product/getProduct";
 
 
 export const App: React.FC = React.memo(() => {
@@ -126,7 +127,14 @@ export const App: React.FC = React.memo(() => {
                 </>
               }
             />
-            
+            <Route
+              path="/addProduct"
+              element={
+                <>
+                  <ProductData/>
+                </>
+              }
+   />
      
             <Route path="/subservice" element={<SubService />} />
             {/* <Route path="/settings"element={<>  <Settings />   </>  }  /> */}
