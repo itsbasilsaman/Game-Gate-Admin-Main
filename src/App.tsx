@@ -10,6 +10,7 @@ import DefaultLayout from "./layout/DefaultLayout";
 import ECommerce from "./components/pages/Dashboard/Ecommerce";
 // import FormLayout from './components/pages/Form/FormLayout';
 // import Tables from './components/pages/Table';
+
 import SubServiceForm from "./components/pages/Form/SubServiceForm";
 import BrandData from "./components/pages/Form/Brand";
 import SubService from "./components/Table/SubService";
@@ -21,12 +22,17 @@ import BrandDetail from "./components/Table/BrandDetail";
 import SellerListSection from "./components/pages/seller/sellerList";
 import SellerProfile from "./components/Table/SellerProfile";
 
+
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
   console.log("my role and my isLogged", isLogged);
   return (
     <Fragment>
       <Toaster position="top-center" />
+      
+      
+
+        
       <Suspense fallback={<Loading />}>
         {" "}
         <Routes>
@@ -120,11 +126,8 @@ export const App: React.FC = React.memo(() => {
                 </>
               }
             />
-            {/* <Route path="/settings"element={<>  <Settings />
-            </>
-          }
-        />
-        */}
+            
+     
             <Route path="/subservice" element={<SubService />} />
             {/* <Route path="/settings"element={<>  <Settings />   </>  }  /> */}
             <Route path="/subservice" element={<SubService />} />{" "}
