@@ -1,3 +1,4 @@
+
 export const validateProductData = (product: {
   serviceId: string;
   brandId: string;
