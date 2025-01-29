@@ -73,7 +73,6 @@ export interface Option {
 }
 
 export interface FormState {
-  subService: string;
   name: string;
   nameAr: string;
   description: string;
@@ -97,10 +96,7 @@ export const validateSubService = (formState: FormState) => {
   let hasError = false;
 
   // Validate SubService
-  if (!formState.subService.trim()) {
-    errors.subService = "Sub Service is required";
-    hasError = true;
-  }
+
 
   // Validate Name
   if (!formState.name.trim()) {

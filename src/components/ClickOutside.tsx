@@ -43,6 +43,7 @@ const ClickOutside: React.FC<Props> = ({
 
   return (
     <div ref={wrapperRef} className={`${className || ''}`}>
+      
       {children}
     </div>
   );

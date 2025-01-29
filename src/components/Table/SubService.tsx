@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { AppDispatch, RootState } from "../../reduxKit/store";
+import { GetSubServiceAction } from "../../reduxKit/actions/auth/subService/subServiceAction";
+import { useSelector } from "react-redux";
 
 const initialData = [
   {
@@ -14,9 +18,12 @@ const initialData = [
 
 const SubService = () => {
   const [subServices, setSubServices] = useState(initialData);
+  const [newsubServices, setnewSubServices] = useState([]);
   const [isEditing, setIsEditing] = useState<number | null>(null);
   const [editedName, setEditedName] = useState("");
   const [editedNameAr, setEditedNameAr] = useState("");
+  const dispatch=useDispatch<AppDispatch>()
+  const {loading, error}=useSelector((state:RootState)=>state.subService)
 
   const handleToggleActive = (index: number) => {
     setSubServices((prev) =>
@@ -25,6 +32,32 @@ const SubService = () => {
       )
     );
   };
+
+  if(newsubServices){
+    console.log("|||||||||||",newsubServices);
+    
+  }
+
+
+  useEffect(() => {
+     const GetSubServiceList = async () => {
+       try {
+         const resultAction = await dispatch(GetSubServiceAction()).unwrap()
+         console.log("yeeeeeeeee",resultAction);
+         
+         if (GetSubServiceAction.fulfilled.match(resultAction)) {
+          setnewSubServices(resultAction.payload.data);
+         } else {
+           console.error("Failed to fetch services: ", resultAction.payload || resultAction.error);
+         }
+       } catch (error) {
+         console.error("Unexpected error while fetching services: ", error);
+       }
+     };
+     GetSubServiceList();
+   }, [dispatch]);
+
+  
 
   const handleEditClick = (index: number, name: string, nameAr: string) => {
     setIsEditing(index);
@@ -61,6 +94,37 @@ const SubService = () => {
           </button>
         </Link>
       </div>
+
+      {error && (
+        <div className=" w-full justify-center flex items-center">
+
+   
+       <div className="flex items-center w-1/2  justify-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md animate-bounce">
+      <svg
+        className="w-6 h-6 mr-2 text-red-600 animate-pulse"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.99-.816 1.99-1.87V6.87C20.99 5.816 20.054 5 19 5H5c-1.054 0-1.99.816-1.99 1.87v8.26c0 1.054.936 1.87 1.99 1.87z"
+        />
+      </svg>
+      <p className="font-semibold">Failed to load services. Please try again later.</p>
+    </div>
+    </div>
+      )}
+
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="flex justify-center py-4">
+          <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      )}
 
       {/* Table Header */}
       <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-6 border-t border-stroke py-4 px-4 dark:border-strokedark md:px-6 2xl:px-7.5">
