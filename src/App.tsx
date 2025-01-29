@@ -21,6 +21,7 @@ import BrandDetail from './components/Table/BrandDetail';
 import SellerListSection from './components/pages/seller/sellerList';
 import SellerProfile from './components/Table/SellerProfile';
 import ProductData from './components/pages/product/getProduct';
+ 
 
 
 export const App: React.FC = React.memo(() => {
@@ -31,108 +32,22 @@ export const App: React.FC = React.memo(() => {
       <Toaster position="top-center" />
       <Suspense fallback={<Loading />}> <Routes>  <Route path="/admin/login" element={ <AdminLogin/>} /> </Routes>
       <DefaultLayout> 
-      <Routes>  <Route  index  element= { <ECommerce /> } /> 
-    
-      <Route path="/seller/sellerList" element={<>  <SellerList /></> }/>
- 
-        <Route  path="/brand" element={  <>  <BrandData/>  </>  } />
- 
-        <Route
-          path="/addservice"
-          element={
-            <>
-        
-              <AddService/>
-            </>
-          }
-        />
-
-        
-
-        <Route
-          path="/brandAdd"
-          element={
-            <>
-              <BrandData/>
-            </>
-          }
-        />
-
-        <Route
-          path="/sellerlist"
-          element={
-            <>
-              <SellerListSection/>
-            </>
-          }
-        />
-
-        <Route
-          path="/sellerprofile"
-          element={
-            <>
-              <SellerProfile/>
-            </>
-          }
-        />
-
-          <Route
-          path="/subserviceform"
-          element={
-            <>
-              <SubServiceForm/>
-            </>
-          }
-        />
-
-        <Route
-          path="/productdata"
-          element={
-            <>
-              <ProductData/>
-            </>
-          }
-        />
-
-        <Route
-          path="/brandlist"
-          element={
-            <>
-              <BrandList/>
-            </>
-          }
-        />
-
-        <Route
-          path="/brand-detail"
-          element={
-            <>
-              <BrandDetail/>
-            </>
-          }
-        />
-
-        <Route
-          path="/servicelistsection"
-          element={
-            <>
-               <ServiceListSection/>
-            </>
-          }
-        />
-        {/* <Route path="/settings"element={<>  <Settings />
-            </>
-          }
-        />
-        */}
-        <Route
-          path="/subservice"
-          element={
-             <SubService/>
-          }
-        />
-        {/* <Route path="/settings"element={<>  <Settings />   </>  }  /> */}
-        <Route  path="/subservice" element={  <SubService/>   }/> </Routes> <>
+    <Routes> 
+    <Route  index  element= { <ECommerce /> } /> 
+    <Route path="/seller/sellerList" element={<>  <SellerList /></> }/>
+    <Route  path="/brand" element={  <>  <BrandData/>  </>  } />
+    <Route path="/addservice" element={ <AddService/> }/>
+    <Route path="/brandAdd" element={ <BrandData/> } />
+    <Route path="/sellerlist" element={ <SellerListSection/> } />
+    <Route path="/sellerprofile" element={<SellerProfile/> }/>
+    <Route path="/subserviceform" element={ <SubServiceForm/>}/>
+    <Route path="/addProduct" element={ <ProductData/>} />
+    <Route path="/brandlist" element={ <BrandList/>} />
+    <Route path="/brand-detail" element={<BrandDetail/>}/>
+    <Route path="/servicelistsection" element={ <ServiceListSection/>}/>
+    <Route path="/subservice" element={<SubService/>}/>
+    <Route  path="/subservice" element={  <SubService/>   }/> 
+  </Routes> <>
       </>
   </DefaultLayout>
       </Suspense>
