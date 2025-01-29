@@ -2,16 +2,19 @@ import React, { useState, useRef } from 'react';
 import Breadcrumb from '../../Breadcrumbs/Breadcrumb';
 import { validateServiceAndImage } from './validation';
 import { AddServiceAction } from '../../../reduxKit/actions/auth/service/serviceActions';
-import { Iservice } from '../../../reduxKit/actions/auth/service/serviceActions';
+
 
 import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../reduxKit/store';
+import { AppDispatch, RootState } from '../../../reduxKit/store';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
 
 const AddService: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [nameAr, setNameAr] = useState<string>('');
   const [icon, setIcon] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const {loading}=useSelector((state:RootState)=>state.service)
   const [errors, setErrors] = useState({
     name: '',
     icon: '',
@@ -27,14 +30,17 @@ const AddService: React.FC = () => {
     setErrors(validationErrors);
 
     if (!hasError) {
-      
       try {
-        const service: Iservice = { name, icon, nameAr };
-        console.log("the data for the service is ", service);
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('nameAr', nameAr);
+        if (icon) formData.append('icon', icon);
+  
+        console.log("Service data being sent:", formData);
         
-        const response = await dispatch(AddServiceAction(service));
+        const response = await dispatch(AddServiceAction(formData)).unwrap()
+        toast.success("Service Added Successfully")
         console.log('Service added successfully:', response);
-
         // Reset form fields
         setName('');
         setNameAr('');
@@ -51,9 +57,9 @@ const AddService: React.FC = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const fileSizeLimit = 2 * 1024 * 1024; // 2MB limit
+      const fileSizeLimit = 5 * 1024 * 1024; // 2MB limit
       if (file.size > fileSizeLimit) {
-        setErrors((prev) => ({ ...prev, icon: 'Image size exceeds 2MB.' }));
+        setErrors((prev) => ({ ...prev, icon: 'Image size exceeds 5MB.' }));
       } else {
         setIcon(file);
         setImagePreview(URL.createObjectURL(file));
@@ -63,7 +69,6 @@ const AddService: React.FC = () => {
   };
 
   const handleUpdateImage = () => fileInputRef.current?.click();
-
   const handleDeleteImage = () => {
     setIcon(null);
     setImagePreview(null);
@@ -163,7 +168,34 @@ const AddService: React.FC = () => {
                   type="submit"
                   className="w-full bg-primary text-white py-3 px-6 rounded hover:bg-primary-dark"
                 >
-                  Add Service
+                {loading ? (
+  <div className="flex items-center gap-2">
+    <svg
+      className="animate-spin h-4 w-4 text-white"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8z"
+      ></path>
+    </svg>
+    <span>Adding...</span>
+  </div>
+) : (
+  "Add"
+)}
+
                 </button>
               </div>
             </form>

@@ -10,17 +10,28 @@ export const axiosIn = axios.create({
 });
  
 
-export const config = {
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${Cookies.get("accessToken")}`  // Retrieve the access token from the cookies
-    },
-    withCredentials: false // Typically used for CORS requests; set to true if needed for credentials
-  };
 
-  export const configWithToken = () => {
-    let token = Cookies.get("accessToken");
-    token = token ? token.replace(/^"|"$/g, "").trim() : undefined; // Set undefined instead of null
+export const configWithTokenMultiPart = () => {
+  let token = Cookies.get("accessToken");
+  // const  myfd="sfdsdfewsfsf897d8f97d8fds8f78dsf"
+  token = token ? token.replace(/^"|"$/g, "").trim() : undefined; // Set undefined instead of null
+    console.log("MY token in adminside now :", token);
+    
+    return {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: token ? `Bearer ${token}` : undefined, // Explicitly handle undefined
+      },
+      withCredentials: false,
+    };
+  };
+  
+  
+
+export const configWithToken = () => {
+  let token = Cookies.get("accessToken");
+  // const  myfd="sfdsdfewsfsf897d8f97d8fds8f78dsf"
+  token = token ? token.replace(/^"|"$/g, "").trim() : undefined; // Set undefined instead of null
     console.log("MY token in adminside now :", token);
     
     return {
@@ -32,4 +43,19 @@ export const config = {
     };
   };
   
+
+
+
+
+
+
+
+
+        export const config = {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${Cookies.get("accessToken")}`  // Retrieve the access token from the cookies
+            },
+            withCredentials: false // Typically used for CORS requests; set to true if needed for credentials
+          };
   
