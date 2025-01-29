@@ -89,8 +89,8 @@ export interface FormState {
   nameAr: string;
   description: string;
   descriptionAr: string;
-  purchaseType: string;
-  options: Option[];
+  // purchaseType: string;
+  // options: Option[];
 }
 
 // Define the errors for each field in the form
@@ -133,12 +133,7 @@ export const validateSubService = (formState: FormState) => {
     errors.descriptionAr = "Arabic Description is required";
     hasError = true;
   }
-
-  // Validate Purchase Type
-  if (!formState.purchaseType.trim()) {
-    errors.purchaseType = "Purchase Type is required";
-    hasError = true;
-  }
+ 
 
   return { errors, hasError };
 };

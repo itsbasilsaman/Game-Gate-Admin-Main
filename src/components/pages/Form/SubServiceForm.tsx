@@ -14,20 +14,7 @@ const SubServiceForm: React.FC = () => {
     nameAr: "",
     description: "",
     descriptionAr: "",
-    purchaseType: "",
-    options: [
-      {
-        brandId: "09eb6b41-fb99-4fc8-85f8-161e75355c8e",
-        regionIds: [
-          "08b7bbda-0fce-41e9-b296-23b7f89b122d",
-          "15f75da2-07b2-4d7f-a498-f139703cc97c",
-        ],
-      },
-      {
-        brandId: "7b58531b-8c28-444c-84f4-74bcb2c0d02d",
-        regionIds: ["08b7bbda-0fce-41e9-b296-23b7f89b122d"],
-      },
-    ],
+    
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -59,8 +46,6 @@ const SubServiceForm: React.FC = () => {
       formData.append("nameAr", formState.nameAr);
       formData.append("description", formState.description);
       formData.append("descriptionAr", formState.descriptionAr);
-      formData.append("purchaseType", formState.purchaseType);
-      formData.append("options", JSON.stringify(formState.options));
       console.log("Dispatching action with:", formData);
       await dispatch(AddSubServiceAction(formData)).unwrap();
       toast.success("Sub Service Created Successfully");
@@ -70,20 +55,7 @@ const SubServiceForm: React.FC = () => {
         nameAr: "",
         description: "",
         descriptionAr: "",
-        purchaseType: "",
-        options: [
-          {
-            brandId: "09eb6b41-fb99-4fc8-85f8-161e75355c8e",
-            regionIds: [
-              "08b7bbda-0fce-41e9-b296-23b7f89b122d",
-              "15f75da2-07b2-4d7f-a498-f139703cc97c",
-            ],
-          },
-          {
-            brandId: "7b58531b-8c28-444c-84f4-74bcb2c0d02d",
-            regionIds: ["08b7bbda-0fce-41e9-b296-23b7f89b122d"],
-          },
-        ],
+        
       });
     } catch (error) {
       console.error("Failed to add sub-service:", error);
@@ -166,21 +138,7 @@ const SubServiceForm: React.FC = () => {
                 )}
               </div>
 
-              {/* Purchase Type */}
-              <div className="mb-4.5">
-                <label className="mb-2.5 block text-black dark:text-white">
-                  Purchase Type
-                </label>
-                <input
-                  type="text"
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none"
-                  value={formState.purchaseType}
-                  onChange={(e) => handleChange("purchaseType", e.target.value)}
-                />
-                {errors.purchaseType && (
-                  <p className="text-red-500 text-sm">{errors.purchaseType}</p>
-                )}
-              </div>
+              
 
               {/* Full width button on large screens */}
               <div className="col-span-1 lg:col-span-2">

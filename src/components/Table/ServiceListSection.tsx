@@ -50,6 +50,11 @@ const ServiceListSection = () => {
     GetServiceList();
   }, [dispatch]);
 
+  if(services){
+    console.log('12344', services);
+    
+  }
+
 
   const handleViewDetails = async (id: string) => {
     try {
