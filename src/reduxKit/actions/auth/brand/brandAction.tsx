@@ -15,12 +15,12 @@ export interface Iservice{
 
 
 
-export const AddServiceAction= createAsyncThunk(
-    "admin/addService",
+export const AddBrandAction= createAsyncThunk(
+    "admin/AddBrandAction",
     async (adminCredentials:FormData,{rejectWithValue})=>{
         try {
-            console.log( "admin service data  ",adminCredentials);
-            const response = await axiosIn.post(`/admin/service`, adminCredentials,configWithTokenMultiPart());
+            console.log( "admin brand data  ",adminCredentials);
+            const response = await axiosIn.post(`/admin/brand`, adminCredentials,configWithTokenMultiPart());
             console.log("the response data is خب سثق ", response);
             return response.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,8 +34,8 @@ export const AddServiceAction= createAsyncThunk(
     }
   )
 
-export const EditServiceAction= createAsyncThunk(
-    "admin/EditService",
+export const EditBrandAction= createAsyncThunk(
+    "admin/EditBrand",
     async (adminCredentials:FormData,{rejectWithValue})=>{
         try {
             console.log( "admin service data  ",adminCredentials);
@@ -53,12 +53,12 @@ export const EditServiceAction= createAsyncThunk(
           }
     }
   )
-export const GetServiceAction= createAsyncThunk(
-    "admin/getService",
+export const GetAllBrandAction= createAsyncThunk(
+    "admin/getBrand",
     async (__,{rejectWithValue})=>{
         try {
             console.log( "admin get service ");
-            const response = await axiosIn.get(`/admin/service`,configWithToken());
+            const response = await axiosIn.get(`/admin/brand`,configWithToken());
             console.log("the response get tyhe service data is ", response);
             return response.data.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -72,12 +72,12 @@ export const GetServiceAction= createAsyncThunk(
     }
   )
 
-export const GetServiceByIdAction= createAsyncThunk(
-    "admin/getServiceById",
+export const GetBrandByIdAction= createAsyncThunk(
+    "admin/getBrandById",
     async (id:string,{rejectWithValue})=>{ 
         try {
-            console.log( "admin get service ",id);
-            const response = await axiosIn.get(`/admin/service/${id}`,configWithToken());
+            console.log( "admin get brand ",id);
+            const response = await axiosIn.get(`/admin/brand/${id}`,configWithToken());
             console.log("the response get tyhe service data is ", response);
             return response.data.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,10 +91,10 @@ export const GetServiceByIdAction= createAsyncThunk(
     }
   ) 
 export const ActiveInActiveAction= createAsyncThunk(
-    "admin/getServiceById",
+    "admin/getBrandById",
     async (id:string,{rejectWithValue})=>{ 
         try {
-            const response = await axiosIn.patch(`/admin/service/${id}`,configWithToken());
+            const response = await axiosIn.get(`/admin/brand/${id}`,configWithToken());
             console.log("the response get tyhe service data is ", response);
             return response.data.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -112,11 +112,11 @@ export const ActiveInActiveAction= createAsyncThunk(
 
 
   export const DeleteServiceAction= createAsyncThunk(
-    "admin/deleteService",
+    "admin/deleteBrand",
     async (id:string,{rejectWithValue})=>{
         try {
-            console.log( "admin delete service id ",id);
-            const response = await axiosIn.delete(`/admin/service/${id}`,configWithToken());
+            console.log( "admin delete brand id ",id);
+            const response = await axiosIn.delete(`/admin/brand/${id}`,configWithToken());
             console.log("the response delete tyhe service data is ", response);
             return response.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
