@@ -6,15 +6,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 
-export interface Iservice{
-    name: string
-    nameAr:string 
-    icon:File|null
-}
-
-
-
-
 export const AddBrandAction= createAsyncThunk(
     "admin/AddBrandAction",
     async (adminCredentials:FormData,{rejectWithValue})=>{
@@ -53,6 +44,7 @@ export const EditBrandAction= createAsyncThunk(
           }
     }
   )
+  
 export const GetAllBrandAction= createAsyncThunk(
     "admin/getBrand",
     async (__,{rejectWithValue})=>{
@@ -90,7 +82,7 @@ export const GetBrandByIdAction= createAsyncThunk(
           }
     }
   ) 
-export const ActiveInActiveAction= createAsyncThunk(
+export const ActiveBrandInActiveAction= createAsyncThunk(
     "admin/getBrandById",
     async (id:string,{rejectWithValue})=>{ 
         try {
@@ -111,7 +103,7 @@ export const ActiveInActiveAction= createAsyncThunk(
 
 
 
-  export const DeleteServiceAction= createAsyncThunk(
+  export const DeleteBrandAction= createAsyncThunk(
     "admin/deleteBrand",
     async (id:string,{rejectWithValue})=>{
         try {

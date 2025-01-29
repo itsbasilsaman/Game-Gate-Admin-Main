@@ -9,7 +9,7 @@ import { RootState } from "./reduxKit/store";
 import DefaultLayout from "./layout/DefaultLayout";
 import ECommerce from "./components/pages/Dashboard/Ecommerce";
 import SubServiceForm from "./components/pages/Form/SubServiceForm";
-import BrandData from "./components/pages/Form/Brand";
+import BrandData from "./components/pages/Form/AddBrand";
 import SubService from "./components/Table/SubService";
 import SellerList from "./components/pages/seller/sellerList";
 import BrandList from "./components/Table/BrandList";
@@ -35,6 +35,7 @@ export const App: React.FC = React.memo(() => {
         <Routes>
           <Route path="/admin/login" element={<AdminLogin />} />
         </Routes>
+
         {!isLoginRoute && (
           <DefaultLayout>
             <Routes>
