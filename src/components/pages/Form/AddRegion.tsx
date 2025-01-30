@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import Breadcrumb from '../../Breadcrumbs/Breadcrumb';
 import { validateRegionAndImage } from './validation';
 import toast from 'react-hot-toast';
 
