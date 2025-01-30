@@ -1,127 +1,135 @@
 import { useEffect, useState } from 'react';
-import {   BrandProductList } from '../types/brandprouduct';
-import ProductOne from '../../images/product/product-01.png';
-import ProductTwo from '../../images/product/product-02.png';
-import ProductThree from '../../images/product/product-03.png';
-import ProductFour from '../../images/product/product-04.png';
-import { GetAllBrandAction } from '../../reduxKit/actions/auth/brand/brandAction';
-
- 
-import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { FaEdit } from 'react-icons/fa';
 import { AppDispatch } from '../../reduxKit/store';
+import {
+  GetAllBrandAction,
+  EditBrandAction,
+  ActiveBrandInActiveAction,
+  DeleteBrandAction,
+} from '../../reduxKit/actions/auth/brand/brandAction';
 
-const productData: BrandProductList[] = [
-  {
-    id: 1,
-    image: ProductOne,
-    description: 'A great watch for fitness tracking.',
-    name: 'Apple Watch Series 7',
-    brandDetail : '/brand-detail'
-  },
-  {
-    id: 2,
-    image: ProductTwo,
-    description: 'Powerful laptop with M1 chip.',
-    name: 'Macbook Pro M1',
-        brandDetail : '/brand-detail'
-  },
-  {
-    id: 3,
-    image: ProductThree,
-    description: 'Budget-friendly performance laptop.',
-    name: 'Dell Inspiron 15',
-        brandDetail : '/brand-detail'
-  },
-  {
-    id: 4,
-    image: ProductFour,
-    description: 'Reliable business laptop.',
-    name: 'HP Probook 450',
-        brandDetail : '/brand-detail'
-  },
-];
+interface Brand {
+  id: number;
+  name: string;
+  nameAr: string;
+  description: string;
+  descriptionAr: string;
+  image: string;
+  isActive: boolean;
+}
 
 const BrandList = () => {
-  const [products, setProducts] = useState<BrandProductList[]>(productData);
-  const dispatch=useDispatch<AppDispatch>()
-  const [brands,setBrands]=useState()
-   console.log(setProducts);
-   
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [isEditing, setIsEditing] = useState<number | null>(null);
+  const [editedName, setEditedName] = useState('');
+  const [editedNameAr, setEditedNameAr] = useState('');
+  const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const resultAction = await dispatch(GetAllBrandAction()).unwrap();
+        setBrands(resultAction);
+      } catch (error) {
+        console.error('Failed to fetch brands:', error);
+      }
+    };
+    fetchBrands();
+  }, [dispatch]);
 
+  const handleToggleActive = async (index: number, id: number) => {
+    try {
+      await dispatch(ActiveBrandInActiveAction(id)).unwrap();
+      setBrands((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, isActive: !item.isActive } : item))
+      );
+    } catch (error) {
+      console.error('Failed to toggle active status:', error);
+    }
+  };
 
-    useEffect(() => {
-       const GetBrandList = async () => {
-         try {
-           const resultAction = await dispatch(GetAllBrandAction());
-           if (GetAllBrandAction.fulfilled.match(resultAction)) {
-            setBrands(resultAction.payload);
-           } else {
-             console.error("Failed to fetch services: ", resultAction.payload || resultAction.error);
-           }
-         } catch (error) {
-           console.error("Unexpected error while fetching services: ", error);
-         }
-       };
-       GetBrandList();
-     }, [dispatch]);
+  const handleEditClick = (index: number, name: string, nameAr: string) => {
+    setIsEditing(index);
+    setEditedName(name);
+    setEditedNameAr(nameAr);
+  };
 
+  const handleSaveEdit = async (index: number, id: number) => {
+    const formData = new FormData();
+    formData.append('id', id.toString());
+    formData.append('name', editedName);
+    formData.append('nameAr', editedNameAr);
 
-  if(brands){
-    console.log("the brand data of fetch ***&&&", brands);
-  }
- 
+    try {
+      await dispatch(EditBrandAction(formData)).unwrap();
+      setBrands((prev) =>
+        prev.map((item, i) => (i === index ? { ...item, name: editedName, nameAr: editedNameAr } : item))
+      );
+      setIsEditing(null);
+    } catch (error) {
+      console.error('Failed to save edit:', error);
+    }
+  };
+
+  const handleDelete = async (index: number, id: number) => {
+    try {
+      await dispatch(DeleteBrandAction(id)).unwrap();
+      setBrands((prev) => prev.filter((_, i) => i !== index));
+    } catch (error) {
+      console.error('Failed to delete brand:', error);
+    }
+  };
 
   return (
-    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="py-6 px-4 md:px-6 xl:px-7.5 flex justify-between">
-        <h4 className="text-xl font-semibold text-black dark:text-white">
-          Brand List
-        </h4>
+    <div className="rounded-sm border bg-white shadow-default">
+      <div className="py-6 px-4 flex justify-between">
+        <h4 className="text-xl font-semibold">Brand List</h4>
         <Link to={'/brandAdd'}>
-          <button className="px-[12px] py-[8px] bg-gray-200 font-medium border-black border hover:bg-gray-100">
-            Add New Brand
-          </button>
+          <button className="px-4 py-2 bg-gray-200 border hover:bg-gray-100">Add New Brand</button>
         </Link>
       </div>
 
-      <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
-          <p className="font-medium">Brand </p>
-        </div>
-        
-      </div>
-
-      {products.map((product) => (
-        <div
-          className="grid   border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
-          key={product.id}
-        >
-          <div className="col-span-3 flex items-center">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="h-12.5 w-15 rounded-md">
-                <img src={product.image} alt="Product" />
-              </div>
-               {product.name}
-            </div>
+      {brands.map((brand, index) => (
+        <div key={brand.id} className="grid grid-cols-6 border-t py-4 px-4">
+          <div className="col-span-1 flex items-center">
+            <img src={brand.image} alt={brand.name} className="h-12 w-12 rounded-md" />
           </div>
-
-          <div className="col-span-2 hidden items-center sm:flex">
-          {product.description}
+          <div className="col-span-1 flex items-center">
+            {isEditing === index ? (
+              <input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)} className="border p-1 rounded" />
+            ) : (
+              <p>{brand.name}</p>
+            )}
           </div>
-       
-        <Link to={product.brandDetail} className='underline hover:text-blue-950'>
-            <div className="col-span-2 hidden items-center sm:flex">
-            View More
-            </div>
-        </Link>
-         
+          <div className="col-span-1 flex items-center">
+            {isEditing === index ? (
+              <input type="text" value={editedNameAr} onChange={(e) => setEditedNameAr(e.target.value)} className="border p-1 rounded" />
+            ) : (
+              <p>{brand.nameAr}</p>
+            )}
+          </div>
+          <div className="col-span-1 flex items-center">
+            <button
+              onClick={() => handleToggleActive(index, brand.id)}
+              className={`px-3 py-1 rounded text-white ${brand.isActive ? 'bg-green-500' : 'bg-red-500'}`}
+            >
+              {brand.isActive ? 'Active' : 'Inactive'}
+            </button>
+          </div>
+          <div className="col-span-1 flex items-center">
+            {isEditing === index ? (
+              <button onClick={() => handleSaveEdit(index, brand.id)} className="text-blue-600 font-bold">Save</button>
+            ) : (
+              <FaEdit onClick={() => handleEditClick(index, brand.name, brand.nameAr)} className="cursor-pointer text-blue-600" />
+            )}
+          </div>
+          <div className="col-span-1 flex items-center">
+            <button onClick={() => handleDelete(index, brand.id)} className="text-red-500 font-bold">Delete</button>
+          </div>
         </div>
       ))}
-
- 
-       
     </div>
   );
 };

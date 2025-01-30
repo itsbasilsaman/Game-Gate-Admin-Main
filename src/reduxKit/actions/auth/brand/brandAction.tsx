@@ -25,25 +25,25 @@ export const AddBrandAction= createAsyncThunk(
     }
   )
 
-export const EditBrandAction= createAsyncThunk(
+  
+  export const EditBrandAction = createAsyncThunk(
     "admin/EditBrand",
-    async (adminCredentials:FormData,{rejectWithValue})=>{
-        try {
-            console.log( "admin service data  ",adminCredentials);
-            const id = adminCredentials.get('id');
-            const response = await axiosIn.post(`/admin/service/${id}`, adminCredentials,configWithTokenMultiPart());
-            console.log("the response data is of edityed sevices he dat is the  خب سثق ", response);
-            return response.data;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            if (error.response && error.response.data) {
-              return rejectWithValue(error.response.data.message);
-            } else {
-              return rejectWithValue({ message: "Something went wrong!" });
-            }
-          }
+    async (adminCredentials: FormData, { rejectWithValue }) => {
+      try {
+        console.log("admin service data  ", adminCredentials);
+        const id = adminCredentials.get('id');
+        const response = await axiosIn.put(`/admin/brand/${id}`, adminCredentials, configWithTokenMultiPart());
+        console.log("the response data is of edited brand ", response);
+        return response.data;
+      } catch (error: any) {
+        if (error.response && error.response.data) {
+          return rejectWithValue(error.response.data.message);
+        } else {
+          return rejectWithValue({ message: "Something went wrong!" });
+        }
+      }
     }
-  )
+  );
   
 export const GetAllBrandAction= createAsyncThunk(
     "admin/getBrand",
@@ -82,23 +82,22 @@ export const GetBrandByIdAction= createAsyncThunk(
           }
     }
   ) 
-export const ActiveBrandInActiveAction= createAsyncThunk(
-    "admin/getBrandById",
-    async (id:string,{rejectWithValue})=>{ 
-        try {
-            const response = await axiosIn.get(`/admin/brand/${id}`,configWithToken());
-            console.log("the response get tyhe service data is ", response);
-            return response.data.data;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            if (error.response && error.response.data) {
-              return rejectWithValue(error.response.data.message);
-            } else {
-              return rejectWithValue({ message: "Something went wrong!" });
-            }
-          }
+export const ActiveBrandInActiveAction = createAsyncThunk(
+  "admin/ActiveBrandInActive",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosIn.put(`/admin/brand/${id}`, { isActive: true }, configWithToken());
+      console.log("the response data is ", response);
+      return response.data.data;
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue({ message: "Something went wrong!" });
+      }
     }
-  )
+  }
+);
 
 
 
