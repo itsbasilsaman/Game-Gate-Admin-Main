@@ -1,14 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useRef } from 'react';
 import Breadcrumb from '../../Breadcrumbs/Breadcrumb';
 import { validateRegionAndImage } from './validation';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../../../reduxKit/store';
+import { useSelector } from 'react-redux';
+
+import { AddRegionAction } from '../../../reduxKit/actions/auth/region/regionAction';
+import Swal from 'sweetalert2';
 
 const AddRegion: React.FC = () => {
   const [name, setName] = useState<string>('');
   const [nameAr, setNameAr] = useState<string>('');
   const [icon, setIcon] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const {loading}=useSelector((state:RootState)=>state.region)
+  const dispatch=useDispatch<AppDispatch>()
+
   const [errors, setErrors] = useState({
     name: '',
     icon: '',
@@ -24,39 +33,50 @@ const AddRegion: React.FC = () => {
 
     if (!hasError) {
       try {
-        setLoading(true);
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('nameAr', nameAr);
         if (icon) formData.append('icon', icon);
 
-        console.log("Region data being sent:", formData);
 
-        // Replace with your actual API endpoint
-        const response = await fetch('https://your-api-endpoint.com/regions', {
-          method: 'POST',
-          body: formData,
-        });
+        const response= await dispatch(AddRegionAction(formData)).unwrap()
 
-        if (!response.ok) {
-          throw new Error('Failed to add region');
+        console.log("the response of the @@@@@@@@@ addRegion",response.data );
+        if(response.success){
+
+          toast.success(response.message);
+          setName('');
+          setNameAr('');
+          setIcon(null);
+          setImagePreview(null);
+          setErrors({ name: '', icon: '', nameAr: '' });
         }
-
-        const data = await response.json();
-        toast.success("Region Added Successfully");
-        console.log('Region added successfully:', data);
-
-        // Reset form fields
-        setName('');
-        setNameAr('');
-        setIcon(null);
-        setImagePreview(null);
-        setErrors({ name: '', icon: '', nameAr: '' });
-      } catch (error) {
-        console.error('Error adding region:', error);
-        setErrors((prev) => ({ ...prev, form: 'Failed to add region. Please try again.' }));
-      } finally {
-        setLoading(false);
+       
+      } catch (error:any) {
+        console.error("Submission error:", error);
+             Swal.fire({
+               icon: "error",
+               title: "Submission Failed!",
+               text: error.message || "An unexpected error occurred.",
+               timer: 2000,
+               toast: true,
+               showConfirmButton: false,
+               timerProgressBar: true,
+               background: '#fff',
+               color: '#721c24',
+               iconColor: '#f44336',
+               didOpen: (toast) => {
+                 toast.addEventListener('mouseenter', Swal.stopTimer);
+                 toast.addEventListener('mouseleave', Swal.resumeTimer);
+               },
+               showClass: {
+                 popup: 'animate__animated animate__fadeInDown'
+               },
+               hideClass: {
+                 popup: 'animate__animated animate__fadeOutUp'
+               }
+             });
       }
     }
   };

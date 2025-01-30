@@ -4,6 +4,9 @@ import { MdDelete } from "react-icons/md";
 import Modal from './Modal';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../reduxKit/store';
+import { GetRegionAction } from '../../reduxKit/actions/auth/region/regionAction';
 
 interface Region {
   id: string;
@@ -17,6 +20,7 @@ const RegionListSection = () => {
   const [regions, setRegions] = useState<Region[]>([]);
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [editedRegion, setEditedRegion] = useState<Partial<Region>>({});
+  const dispatch=useDispatch<AppDispatch>()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
 
@@ -25,6 +29,25 @@ const RegionListSection = () => {
   }, []);
 
   console.log(isEditing ,editedRegion);
+
+
+  useEffect(()=>{
+
+    const GetRegions=async()=>{
+      try {
+        
+        const response= await dispatch(GetRegionAction())
+        console.log("got region response()()() ",response);
+        //  setRegions(response.data)
+
+      } catch (error) {
+        console.error('Failed to fetch brands:', error);
+      }
+
+    }
+    GetRegions()
+
+  },[dispatch])
   
 
   const handleDeleteClick = (id: string) => {

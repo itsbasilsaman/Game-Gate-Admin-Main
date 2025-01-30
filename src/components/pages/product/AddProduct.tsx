@@ -9,9 +9,12 @@ import { GetServiceAction } from "../../../reduxKit/actions/auth/service/service
 import { Service } from "../../../interfaces/admin/services";
 import Swal from "sweetalert2";
 import { GetAllBrandAction } from "../../../reduxKit/actions/auth/brand/brandAction";
+import toast from "react-hot-toast";
 import { Brand } from "../../../interfaces/admin/brand";
 
-const ProductData: React.FC = () => { 
+
+const AddProduct: React.FC = () => { 
+
   const {loading}=useSelector((state:RootState)=>state.product)
   const dispatch = useDispatch<AppDispatch>()
   const [product, setProduct] = useState<{
@@ -161,10 +164,11 @@ const ProductData: React.FC = () => {
     const validationErrors = validateProductData(product);
     if (Object.keys(validationErrors).length > 0) {
       console.error("Validation errors:", validationErrors);
+      const errorMessages = Object.values(validationErrors).join('\n');
       Swal.fire({
         icon: "error",
         title: "Validation Error!",
-        text: "Please fix the highlighted errors before submitting.",
+        text: errorMessages,
         timer: 3000,
         toast: true,
         showConfirmButton: false,
@@ -209,6 +213,7 @@ const ProductData: React.FC = () => {
     // Dispatch action
     try {
       const response = await dispatch(AddProductAction(formData)).unwrap();
+      toast.success("Product Added Successfull")
       console.log("Submitted Product Data:", response);
     } catch (error: any) {
       console.error("Submission error:", error);
@@ -496,4 +501,4 @@ const ProductData: React.FC = () => {
   );
 };
 
-export default ProductData;
+export default AddProduct;
