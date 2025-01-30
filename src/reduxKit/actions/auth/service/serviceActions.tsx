@@ -40,7 +40,7 @@ export const EditServiceAction= createAsyncThunk(
         try {
             console.log( "admin service data  ",adminCredentials);
             const id = adminCredentials.get('id');
-            const response = await axiosIn.post(`/admin/service/${id}`, adminCredentials,configWithTokenMultiPart());
+            const response = await axiosIn.put(`/admin/service/${id}`, adminCredentials,configWithTokenMultiPart());
             console.log("the response data is of edityed sevices he dat is the  خب سثق ", response);
             return response.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
