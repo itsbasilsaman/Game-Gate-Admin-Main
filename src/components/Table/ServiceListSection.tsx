@@ -8,17 +8,9 @@ import { Link } from 'react-router-dom';
 import { AppDispatch, RootState } from '../../reduxKit/store';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import { Service } from '../../interfaces/admin/services';
 
-interface Service {
-  id: string;
-  name: string;
-  nameAr: string;
-  iconUrl: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  isActive: boolean;
-}
+
 
 
 
@@ -147,6 +139,7 @@ const ServiceListSection = () => {
       
       console.log("Updating service with ID", id, "with data", editedService);
       const formData = new FormData();
+      
       if (editedService.name !== undefined) {
         formData.append('name', editedService.name);
       }

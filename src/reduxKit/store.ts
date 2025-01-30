@@ -5,6 +5,7 @@ import sellerSlice from "./reducers/auth/seller";
 import ServiceSlice from "./reducers/auth/serviceSlice";
 import SubServiceSlice from "./reducers/auth/subServiceSlice";
 import brandSlice from "./reducers/auth/brandSlice";
+import ProductSlice from "./reducers/auth/productSlice";
  
 export const store = configureStore({
     reducer:{
@@ -13,6 +14,7 @@ export const store = configureStore({
         service:ServiceSlice.reducer,
         subService:SubServiceSlice.reducer,
         brand:brandSlice.reducer,
+        product:ProductSlice.reducer
     } 
 })
 export type RootState = ReturnType<typeof store.getState>
