@@ -139,11 +139,6 @@ export const validateSubService = (formState: FormState) => {
 };
 
 
-
-
-
-
-
 export const validateRegionAndImage = (name: string, nameAr: string, icon: File | null) => {
   const errors = {
     name: '',
@@ -171,6 +166,4 @@ export const validateRegionAndImage = (name: string, nameAr: string, icon: File 
   }
 
   return { errors, hasError };
-};
-
-  
+}
