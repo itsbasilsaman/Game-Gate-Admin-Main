@@ -1,8 +1,19 @@
-import React, { useState } from "react";
-import Breadcrumb from "../../../components/Breadcrumbs/Breadcrumb";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from "react";
+import Breadcrumb from "../../Breadcrumbs/Breadcrumb";
 import { validateProductData } from "./validation";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../reduxKit/store";
+import { AddProductAction } from "../../../reduxKit/actions/auth/product/productAction";
+import { GetServiceAction } from "../../../reduxKit/actions/auth/service/serviceActions";
+import { Service } from "../../../interfaces/admin/services";
+import Swal from "sweetalert2";
+import { GetAllBrandAction } from "../../../reduxKit/actions/auth/brand/brandAction";
 
-const ProductData: React.FC = () => {
+
+const ProductData: React.FC = () => { 
+  const {loading}=useSelector((state:RootState)=>state.product)
+  const dispatch = useDispatch<AppDispatch>()
   const [product, setProduct] = useState<{
     serviceId: string;
     brandId: string;
@@ -11,7 +22,7 @@ const ProductData: React.FC = () => {
     titleAr: string;
     descriptionAr: string;
     purchaseType: string;
-    deliveryType: string;
+    deliveryTypes: string[];
     subServiceId: string;
     regionId: string;
     image: File | null;
@@ -23,21 +34,98 @@ const ProductData: React.FC = () => {
     titleAr: "",
     descriptionAr: "",
     purchaseType: "",
-    deliveryType: "",
+    deliveryTypes: [],
     subServiceId: "",
     regionId: "",
     image: null,
   });
-
+  const deliveryOptions = ["INSTANT_DELIVERY", "IN_GAME", "EMAIL", "COURIER"];
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const services = ["Service 1", "Service 2", "Service 3"];
-  const brands = ["Brand 1", "Brand 2", "Brand 3"];
+  const [services, setServices] = useState<Service[]>([]);
+  const [brands,setBrands]=useState()
+  
+  // const brands = ["Brand 1", "Brand 2", "Brand 3"];
   const purchaseTypes = ["TOP_UP", "DIGITAL_PINS", "ACCOUNTS", "GIFT_CARD"];
-  const deliveryTypes = ["INSTANT_DELIVERY", "IN_GAME", "EMAIL", "COURIER"];
+  // const deliveryTypes = ["INSTANT_DELIVERY", "IN_GAME", "EMAIL", "COURIER"];
   const subServices = ["Sub-Service 1", "Sub-Service 2"];
   const regions = ["Region 1", "Region 2"];
+
+
+  const handleDeliveryTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setProduct((prev) => {
+      if (prev.deliveryTypes.includes(value)) {
+        // Remove if already selected
+        return { ...prev, deliveryTypes: prev.deliveryTypes.filter((type) => type !== value) };
+      } else {
+        // Add if not selected
+        return { ...prev, deliveryTypes: [...prev.deliveryTypes, value] };
+      }
+    });
+  };
+
+
+  useEffect(() => {
+      const GetServiceList = async () => {
+      try {
+        const resultAction = await dispatch(GetServiceAction());
+        if (GetServiceAction.fulfilled.match(resultAction)) {
+          setServices(resultAction.payload);
+        } else {
+          console.error("Failed to fetch services: ", resultAction.payload || resultAction.error);
+        }
+      } catch (error) {
+        console.error("Unexpected error while fetching services: ", error);
+      }
+    };
+    // GetServiceList();
+  }, [dispatch]);
+
+  if(services){
+    console.log('12344', services);
+    
+  }
+
+
+
+
+
+
+
+
+  
+     
+  
+  
+  
+      useEffect(() => {
+         const GetBrandList = async () => {
+           try {
+             const resultAction = await dispatch(GetAllBrandAction());
+             if (GetAllBrandAction.fulfilled.match(resultAction)) {
+              setBrands(resultAction.payload);
+             } else {
+               console.error("Failed to fetch services: ", resultAction.payload || resultAction.error);
+             }
+           } catch (error) {
+             console.error("Unexpected error while fetching services: ", error);
+           }
+         };
+        //  GetBrandList();
+       }, [dispatch]);
+  
+  
+    if(brands){
+      console.log("the brand data of fetch ***&&&", brands);
+    }
+   
+
+
+
+
+
+  
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -55,18 +143,90 @@ const ProductData: React.FC = () => {
       setErrors((prev) => ({ ...prev, image: "" }));
     }
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("The submit got triggered");
+  
+    // Validate product data
     const validationErrors = validateProductData(product);
-
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      console.log("Submitted Product Data:", product);
-      alert("Product submitted successfully!");
+      console.error("Validation errors:", validationErrors);
+      Swal.fire({
+        icon: "error",
+        title: "Validation Error!",
+        text: "Please fix the highlighted errors before submitting.",
+        timer: 3000,
+        toast: true,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        background: "#fff",
+        color: "#721c24",
+        iconColor: "#f44336",
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
+      });
+      return;
+    }
+  
+    // Create form data
+    const formData = new FormData();
+    formData.append("serviceId", product.serviceId);
+    formData.append("brandId", product.brandId);
+    formData.append("title", product.title);
+    formData.append("description", product.description);
+    formData.append("titleAr", product.titleAr);
+    formData.append("descriptionAr", product.descriptionAr);
+    formData.append("purchaseType", product.purchaseType);
+    
+    // Convert array to JSON string for form submission
+    formData.append("deliveryTypes", JSON.stringify(product.deliveryTypes.join()));
+  
+    formData.append("subServiceId", product.subServiceId);
+    formData.append("regionId", product.regionId);
+  
+    if (product.image) {
+      formData.append("image", product.image);
+    }
+  
+    // Dispatch action
+    try {
+      const response = await dispatch(AddProductAction(formData)).unwrap();
+      console.log("Submitted Product Data:", response);
+    } catch (error: any) {
+      console.error("Submission error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed!",
+        text: error.message || "An unexpected error occurred.",
+        timer: 3000,
+        toast: true,
+        showConfirmButton: false,
+        timerProgressBar: true,
+        background: '#fff',
+        color: '#721c24',
+        iconColor: '#f44336',
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        showClass: {
+          popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOutUp'
+        }
+      });
     }
   };
+  
 
   return (
     <>
@@ -92,11 +252,7 @@ const ProductData: React.FC = () => {
                     className="w-full border rounded py-2 px-3"
                   >
                     <option value="">Select a service</option>
-                    {services.map((service) => (
-                      <option key={service} value={service}>
-                        {service}
-                      </option>
-                    ))}
+                  
                   </select>
                   {errors.serviceId && <p className="text-red-500 text-sm">{errors.serviceId}</p>}
                 </div>
@@ -113,11 +269,11 @@ const ProductData: React.FC = () => {
                     className="w-full border rounded py-2 px-3"
                   >
                     <option value="">Select a brand</option>
-                    {brands.map((brand) => (
+                    {/* {brands.map((brand) => (
                       <option key={brand} value={brand}>
                         {brand}
                       </option>
-                    ))}
+                    ))} */}
                   </select>
                   {errors.brandId && <p className="text-red-500 text-sm">{errors.brandId}</p>}
                 </div>
@@ -205,26 +361,25 @@ const ProductData: React.FC = () => {
 
                 {/* Delivery Type */}
                 <div>
-                  <label className="block text-black">
-                    Delivery Type <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="deliveryType"
-                    value={product.deliveryType}
-                    onChange={handleInputChange}
-                    className="w-full border rounded py-2 px-3"
-                  >
-                    <option value="">Select delivery type</option>
-                    {deliveryTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.deliveryType && (
-                    <p className="text-red-500 text-sm">{errors.deliveryType}</p>
-                  )}
-                </div>
+  <label className="block text-black">
+    Delivery Type <span className="text-red-500">*</span>
+  </label>
+  <select
+    name="deliveryTypes"
+    multiple
+    value={product.deliveryTypes}
+    onChange={handleDeliveryTypeChange}
+    className="w-full border rounded py-2 px-3"
+  >
+    {deliveryOptions.map((type) => (
+      <option key={type} value={type}>
+        {type}
+      </option>
+    ))}
+  </select>
+  {errors.deliveryTypes && <p className="text-red-500 text-sm">{errors.deliveryTypes}</p>}
+</div>
+
 
                 {/* Sub-Service ID */}
                 <div>
@@ -285,11 +440,38 @@ const ProductData: React.FC = () => {
               </div>
 
               <div className="px-6 pb-6">
-                <button
+              <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-500"
+                  className="w-full bg-primary text-white py-3 px-6 rounded hover:bg-primary-dark"
                 >
-                  Submit
+                {loading ? (
+  <div className="flex items-center gap-2">
+    <svg
+      className="animate-spin h-4 w-4 text-white"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8z"
+      ></path>
+    </svg>
+    <span>Adding...</span>
+  </div>
+) : (
+  "Add"
+)}
+
                 </button>
               </div>
             </form>

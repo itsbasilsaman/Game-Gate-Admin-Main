@@ -18,11 +18,13 @@ import AddService from "./components/pages/Form/AddService";
 import BrandDetail from "./components/Table/BrandDetail";
 import SellerListSection from "./components/pages/seller/sellerList";
 import SellerProfile from "./components/Table/SellerProfile";
+ 
 import ProductData from "./components/pages/product/getProduct";
 import UserList from "./components/pages/user-management/userDetails";
 import GetUserById from "./components/pages/user-management/getUserById";
 import AddRegion from "./components/Table/AddRegion";
 import RegionListSection from "./components/Table/RegionListSection";
+ 
 
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
