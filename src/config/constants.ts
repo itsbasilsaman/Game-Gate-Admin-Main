@@ -16,7 +16,6 @@ export const configWithTokenMultiPart = () => {
   // const  myfd="sfdsdfewsfsf897d8f97d8fds8f78dsf"
   token = token ? token.replace(/^"|"$/g, "").trim() : undefined; // Set undefined instead of null
     console.log("MY token in adminside now :", token);
-    
     return {
       headers: {
         "Content-Type": "multipart/form-data",

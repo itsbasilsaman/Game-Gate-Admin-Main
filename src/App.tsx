@@ -18,7 +18,7 @@ import AddService from "./components/pages/Form/AddService";
 import BrandDetail from "./components/Table/BrandDetail";
 import SellerListSection from "./components/pages/seller/sellerList";
 import SellerProfile from "./components/Table/SellerProfile";
-import ProductData from "./components/pages/product/getProduct";
+import ProductData from "./components/pages/product/AddProduct";
 
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
