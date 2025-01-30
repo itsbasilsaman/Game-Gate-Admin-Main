@@ -10,6 +10,7 @@ import { Service } from "../../../interfaces/admin/services";
 import Swal from "sweetalert2";
 import { GetAllBrandAction } from "../../../reduxKit/actions/auth/brand/brandAction";
 import toast from "react-hot-toast";
+import { Brand } from "../../../interfaces/admin/brand";
 
 
 const AddProduct: React.FC = () => { 
@@ -45,7 +46,7 @@ const AddProduct: React.FC = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [services, setServices] = useState<Service[]>([]);
-  const [brands,setBrands]=useState()
+  const [brands,setBrands]=useState<Brand[]>([])
   
   // const brands = ["Brand 1", "Brand 2", "Brand 3"];
   const purchaseTypes = ["TOP_UP", "DIGITAL_PINS", "ACCOUNTS", "GIFT_CARD"];
@@ -81,7 +82,7 @@ const AddProduct: React.FC = () => {
         console.error("Unexpected error while fetching services: ", error);
       }
     };
-    // GetServiceList();
+    GetServiceList();
   }, [dispatch]);
 
   if(services){
@@ -114,7 +115,7 @@ const AddProduct: React.FC = () => {
              console.error("Unexpected error while fetching services: ", error);
            }
          };
-        //  GetBrandList();
+         GetBrandList();
        }, [dispatch]);
   
   
@@ -129,13 +130,23 @@ const AddProduct: React.FC = () => {
 
   
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setProduct((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
+    const handleInputChange = (
+      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
+      const { name, value } = e.target;
+      setProduct((prev) => ({ ...prev, [name]: value }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    
+      // Log the selected service ID when the serviceId changes
+      if (name === "serviceId") {
+        console.log("Selected Service ID:", value);
+      }
+    
+      // Log the selected brand ID when the brandId changes
+      if (name === "brandId") {
+        console.log("Selected Brand ID:", value);
+      }
+    };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -246,41 +257,45 @@ const AddProduct: React.FC = () => {
               <div className="p-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Service ID */}
                 <div>
-                  <label className="block text-black">
-                    Service ID <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="serviceId"
-                    value={product.serviceId}
-                    onChange={handleInputChange}
-                    className="w-full border rounded py-2 px-3"
-                  >
-                    <option value="">Select a service</option>
-                  
-                  </select>
-                  {errors.serviceId && <p className="text-red-500 text-sm">{errors.serviceId}</p>}
-                </div>
+  <label className="block text-black">
+    Service ID <span className="text-red-500">*</span>
+  </label>
+  <select
+    name="serviceId"
+    value={product.serviceId}
+    onChange={handleInputChange}
+    className="w-full border rounded py-2 px-3"
+  >
+    <option value="">Select a service</option>
+    {services.map((service) => (
+      <option key={service.id} value={service.id}>
+        {service.name}
+      </option>
+    ))}
+  </select>
+  {errors.serviceId && <p className="text-red-500 text-sm">{errors.serviceId}</p>}
+</div>
 
                 {/* Brand ID */}
                 <div>
-                  <label className="block text-black">
-                    Brand ID <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    name="brandId"
-                    value={product.brandId}
-                    onChange={handleInputChange}
-                    className="w-full border rounded py-2 px-3"
-                  >
-                    <option value="">Select a brand</option>
-                    {/* {brands.map((brand) => (
-                      <option key={brand} value={brand}>
-                        {brand}
-                      </option>
-                    ))} */}
-                  </select>
-                  {errors.brandId && <p className="text-red-500 text-sm">{errors.brandId}</p>}
-                </div>
+  <label className="block text-black">
+    Brand ID <span className="text-red-500">*</span>
+  </label>
+  <select
+    name="brandId"
+    value={product.brandId}
+    onChange={handleInputChange}
+    className="w-full border rounded py-2 px-3"
+  >
+    <option value="">Select a brand</option>
+    {brands.map((brand) => (
+      <option key={brand.id} value={brand.id}>
+        {brand.name}
+      </option>
+    ))}
+  </select>
+  {errors.brandId && <p className="text-red-500 text-sm">{errors.brandId}</p>}
+</div>
 
                 {/* Title */}
                 <div>
