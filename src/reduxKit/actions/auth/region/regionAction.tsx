@@ -106,24 +106,17 @@ export const ActiveInActiveRegionAction= createAsyncThunk(
 
 
 
-  export const DeleteRegionAction= createAsyncThunk(
-    "admin/deleteProduct",
-    async (id:string,{rejectWithValue})=>{
-        try {
-            console.log( "admin delete product ",id);
-            const response = await axiosIn.delete(`/admin/products/${id}`,configWithToken());
-            console.log("the response delete tyhe service data is ", response);
-            return response.data;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } catch (error: any) {
-            if (error.response && error.response.data) {
-              return rejectWithValue(error.response.data.message);
-            } else {
-              return rejectWithValue({ message: "Something went wrong!" });
-            }
-          }
+  export const DeleteRegionAction = createAsyncThunk(
+    "admin/deleteRegion",
+    async (id: string, { rejectWithValue }) => {
+      try {
+        await axiosIn.delete(`/admin/region/${id}`, configWithToken());
+        return id; // Return the deleted region ID
+      } catch (error:any) {
+        return rejectWithValue(error.response?.data?.message || "Something went wrong!");
+      }
     }
-  )
+  );
   
 
 
