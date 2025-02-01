@@ -30,11 +30,8 @@ import RegionListSection from "./components/Table/RegionListSection";
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
   console.log('check is the user login ****** ', isLogged);
-  
   const location = useLocation();
-
   const isLoginRoute = location.pathname === "/admin/login";
-
   return (
     <Fragment>
       <Toaster position="top-center" />

@@ -24,8 +24,13 @@ const RegionListSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
 
-  useEffect(() => {
+
+  console.log(isEditing ,editedRegion);
+
+  useEffect(()=>{
+
     const GetRegions = async () => {
+
       try {
         const response = await dispatch(GetRegionAction());
         setRegions(response.payload);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {configWithTokenMultiPart,axiosIn, configWithToken} from "../../../../config/constants";
 
 
