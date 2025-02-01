@@ -17,7 +17,6 @@ import { IAdminLogin } from "../../../interfaces/admin/login";
             const {data} = await axiosIn.post(`/admin/login`, adminCredentials,config);
             console.log(data.data.accessToken, data.data.refreshToken, "admin login response data");
             Cookies.set("accessToken", data.data.accessToken, {
-              expires: 7, // 7 days expiration
               secure: true, // Only send cookie over HTTPS
               sameSite: "Strict", // CSRF protection
             });

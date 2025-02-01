@@ -36,6 +36,7 @@ const ServiceListSection = () => {
     GetServiceList();
   }, [dispatch]);
 
+
   const handleViewDetails = async (id: string) => {
     if (detailedServiceId === id) {
       setDetailedServiceId(null); // Collapse if already expanded
