@@ -47,7 +47,6 @@ const ServiceListSection = () => {
     
   }
 
-
   const handleViewDetails = async (id: string) => {
     try {
       const resultAction = await dispatch(GetServiceByIdAction(id));

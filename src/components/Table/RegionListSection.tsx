@@ -30,7 +30,6 @@ const RegionListSection = () => {
 
   console.log(isEditing ,editedRegion);
 
-
   useEffect(()=>{
 
     const GetRegions=async()=>{
