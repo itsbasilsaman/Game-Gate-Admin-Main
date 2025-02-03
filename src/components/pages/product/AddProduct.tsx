@@ -44,7 +44,6 @@ const AddProduct: React.FC = () => {
     purchaseType: "",
     deliveryTypes: [],
     subServiceId: "",
-
     image: null,
   });
   const deliveryOptions = ["INSTANT_DELIVERY", "IN_GAME", "EMAIL", "COURIER"];
@@ -101,7 +100,7 @@ const AddProduct: React.FC = () => {
       try {
         const resultAction = await dispatch(GetSubServiceAction());
         if (GetSubServiceAction.fulfilled.match(resultAction)) {
-          setSubServices(resultAction.payload);
+          setSubServices(resultAction.payload.data);
         } else {
           console.error(
             "Failed to fetch Subservices: ",
@@ -142,7 +141,7 @@ const AddProduct: React.FC = () => {
     console.log("the brand data of fetch ***&&&", brands);
   }
   if (Subservices) {
-    console.log("the Subservices Subservicestch ***&&&", brands);
+    console.log("the Subservices Subservicestch ***&&&", Subservices);
   }
 
   const handleInputChange = (
@@ -216,23 +215,42 @@ const AddProduct: React.FC = () => {
     formData.append("titleAr", product.titleAr);
     formData.append("descriptionAr", product.descriptionAr);
     formData.append("purchaseType", product.purchaseType);
-
     // Convert array to JSON string for form submission
-    formData.append(
-      "deliveryTypes",
-      JSON.stringify(product.deliveryTypes.join())
-    );
-
+    if (Array.isArray(product.deliveryTypes)) {
+      formData.append("deliveryTypes", product.deliveryTypes.join(","));
+    } else {
+      formData.append("deliveryTypes", JSON.stringify(product.deliveryTypes));
+    }
     formData.append("subServiceId", product.subServiceId);
 
     if (product.image) {
       formData.append("image", product.image);
     }
-
     // Dispatch action
     try {
       const response = await dispatch(AddProductAction(formData)).unwrap();
-      toast.success("Product Added Successfull");
+
+ if (response.success) {
+      toast.success(response.message);
+
+      // Reset product fields to null
+      setProduct({
+        serviceId: '',
+        brandId: '',
+        title: '',
+        description: '',
+        titleAr: '',
+        descriptionAr: '',
+        purchaseType: '',
+        deliveryTypes: [],
+        subServiceId: '',
+        image: null,
+      });
+
+      console.log("Product fields reset to null");
+    } else {
+      toast.error("Failed to add product");
+    }
       console.log("Submitted Product Data:", response);
     } catch (error: any) {
       console.error("Submission error:", error);
@@ -456,7 +474,8 @@ const AddProduct: React.FC = () => {
                     onChange={handleInputChange}
                     className="w-full border rounded py-2 px-3"
                   >
-                    {subServiceLoading ? (
+        
+        {subServiceLoading ? (
                       <option value="">🔄 Loading SubService...</option>
                     ) : Array.isArray(Subservices) && Subservices.length > 0 ? (
        
