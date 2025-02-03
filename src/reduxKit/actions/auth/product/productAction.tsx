@@ -8,12 +8,12 @@ export const AddProductAction= createAsyncThunk(
     "admin/addProduct",
     async (adminCredentials:FormData,{rejectWithValue})=>{
         try {
-            console.log( " Product data is dfdsfdsfdsff################  ",adminCredentials.get("brandId"));
-            console.log( " Product data is dfdsfdsfdsff################  ",adminCredentials.get("deliveryTypes"));
+            // console.log( " Product data is dfdsfdsfdsff################  ",adminCredentials.get("brandId"));
+            // console.log( " Product data is dfdsfdsfdsff################  ",adminCredentials.get("deliveryTypes"));
           
-            for (const [key, value] of adminCredentials) {
-              console.log(key, value);
-            }
+            // for (const [key, value] of adminCredentials) {
+            //   console.log(key, value);
+            // }
             const response = await axiosIn.post(`/admin/products`, adminCredentials,configWithTokenMultiPart());
             console.log("the Products", response);
             return response.data; 

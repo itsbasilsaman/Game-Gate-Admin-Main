@@ -101,7 +101,6 @@ export const level = createSlice({
               state.error = payload as string;
             })
 
-
     .addCase(UpdateLevelAction.pending, (state) => {
         state.loading = true;
         state.error = null;

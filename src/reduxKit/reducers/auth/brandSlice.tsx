@@ -9,7 +9,7 @@ import { GetBrandByIdAction } from "../../actions/auth/brand/brandAction";
 export interface UserState {
   userData: UserState | null;
   error: string | null;
-  loading: boolean;
+  brandLoading: boolean;
   Serviceid?: string | null;
 }
 
@@ -20,7 +20,7 @@ const initialState:UserState  = {
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
   error: null,
-  loading: false,
+  brandLoading: false,
   Serviceid: localStorage.getItem("Serviceid")
     ? JSON.parse(localStorage.getItem("Serviceid")!)
     : null,
@@ -43,12 +43,12 @@ export const brandSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(GetAllBrandAction.pending, (state) => {
-        state.loading = true;
+        state.brandLoading = true;
         state.error = null;
       })
        
       .addCase(GetAllBrandAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.error = null;
         state.Serviceid=payload.id
         state.userData = payload;
@@ -56,42 +56,42 @@ export const brandSlice = createSlice({
       })
 
       .addCase(GetAllBrandAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
     .addCase(GetBrandByIdAction.pending, (state) => {
-        state.loading = true;
+        state.brandLoading = true;
         state.error = null;
       })
        
       .addCase(GetBrandByIdAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(GetBrandByIdAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
       
     .addCase(AddBrandAction.pending, (state) => {
-        state.loading = true;
+        state.brandLoading = true;
         state.error = null;
       })
        
       .addCase(AddBrandAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(AddBrandAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.brandLoading = false;
         state.userData = null;
         state.error = payload as string;
       })

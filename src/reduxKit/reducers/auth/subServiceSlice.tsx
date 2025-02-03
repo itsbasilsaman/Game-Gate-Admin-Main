@@ -9,7 +9,7 @@ import { AddSubServiceAction } from "../../actions/auth/subService/subServiceAct
 export interface UserState {
   userData: UserState | null;
   error: string | null;
-  loading: boolean;
+  subServiceLoading: boolean;
   Serviceid?: string | null;
 }
 
@@ -20,7 +20,7 @@ const initialState:UserState  = {
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
   error: null,
-  loading: false,
+  subServiceLoading: false,
   Serviceid: localStorage.getItem("Serviceid")
     ? JSON.parse(localStorage.getItem("Serviceid")!)
     : null,
@@ -43,12 +43,12 @@ export const SubServiceSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(GetSubServiceAction.pending, (state) => {
-        state.loading = true;
+        state.subServiceLoading = true;
         state.error = null;
       })
        
       .addCase(GetSubServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.error = null;
         state.Serviceid=payload.id
         state.userData = payload;
@@ -56,46 +56,45 @@ export const SubServiceSlice = createSlice({
       })
 
       .addCase(GetSubServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
     .addCase(DeleteSubServiceAction.pending, (state) => {
-        state.loading = true;
+        state.subServiceLoading = true;
         state.error = null;
       })
        
       .addCase(DeleteSubServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(DeleteSubServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
       
     .addCase(AddSubServiceAction.pending, (state) => {
-        state.loading = true;
+        state.subServiceLoading = true;
         state.error = null;
       })
        
       .addCase(AddSubServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(AddSubServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.subServiceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
-
 
   },
 });

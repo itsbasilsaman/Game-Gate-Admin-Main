@@ -9,7 +9,7 @@ import { AddServiceAction } from "../../actions/auth/service/serviceActions";
 export interface UserState {
   userData: UserState | null;
   error: string | null;
-  loading: boolean;
+  serviceLoading: boolean;
   Serviceid?: string | null;
 }
 
@@ -19,7 +19,7 @@ const initialState:UserState  = {
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
   error: null,
-  loading: false,
+  serviceLoading: false,
   Serviceid: localStorage.getItem("Serviceid")
     ? JSON.parse(localStorage.getItem("Serviceid")!)
     : null,
@@ -42,12 +42,12 @@ export const ServiceSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(GetServiceAction.pending, (state) => {
-        state.loading = true;
+        state.serviceLoading = true;
         state.error = null;
       })
        
       .addCase(GetServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.error = null;
         state.Serviceid=payload.id
         state.userData = payload;
@@ -55,41 +55,41 @@ export const ServiceSlice = createSlice({
       })
 
       .addCase(GetServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
     .addCase(DeleteServiceAction.pending, (state) => {
-        state.loading = true;
+        state.serviceLoading = true;
         state.error = null;
       })
        
       .addCase(DeleteServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(DeleteServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
 
     .addCase(AddServiceAction.pending, (state) => {
-        state.loading = true;
+        state.serviceLoading = true;
         state.error = null;
       })
        
       .addCase(AddServiceAction.fulfilled, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.error = null;
         state.Serviceid=null
         state.userData = payload;
       })
       .addCase(AddServiceAction.rejected, (state, { payload }) => {
-        state.loading = false;
+        state.serviceLoading = false;
         state.userData = null;
         state.error = payload as string;
       })
