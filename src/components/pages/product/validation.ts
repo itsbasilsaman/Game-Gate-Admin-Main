@@ -8,7 +8,6 @@ export const validateProductData = (product: {
   purchaseType: string;
   deliveryTypes: string[];
   subServiceId: string;
-  regionId: string;
   image: File | null;
 }): Record<string, string> => {
   const errors: Record<string, string> = {};

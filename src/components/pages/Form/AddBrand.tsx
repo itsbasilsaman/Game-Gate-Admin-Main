@@ -13,7 +13,7 @@ const AddBrandData: React.FC = () => {
   const [nameAr, setNameAr] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [descriptionAr, setDescriptionAr] = useState<string>('');
-  const {loading}=useSelector((state:RootState)=>state.brand)
+  const {brandLoading}=useSelector((state:RootState)=>state.brand)
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{nameAr:string,descriptionAr:string, name: string; description: string; image: string }>({
@@ -271,7 +271,7 @@ const AddBrandData: React.FC = () => {
                   type="submit"
                   className="w-full bg-primary text-white py-3 px-6 rounded hover:bg-primary-dark"
                 >
-                {loading ? (
+                {brandLoading ? (
   <div className="flex items-center gap-2">
     <svg
       className="animate-spin h-4 w-4 text-white"
