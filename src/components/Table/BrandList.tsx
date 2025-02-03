@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
-import { AppDispatch } from '../../reduxKit/store';
+import { AppDispatch, RootState } from '../../reduxKit/store';
 import {
   GetAllBrandAction,
   EditBrandAction,
@@ -11,7 +11,7 @@ import {
 } from '../../reduxKit/actions/auth/brand/brandAction';
 
 interface Brand {
-  id: number;
+  id: string;
   name: string;
   nameAr: string;
   description: string;
@@ -26,6 +26,7 @@ const BrandList = () => {
   const [editedName, setEditedName] = useState('');
   const [editedNameAr, setEditedNameAr] = useState('');
   const dispatch = useDispatch<AppDispatch>();
+  const {brandLoading, error} = useSelector((state: RootState) => state.brand);
 
   useEffect(() => {
     const fetchBrands = async () => {
@@ -39,7 +40,7 @@ const BrandList = () => {
     fetchBrands();
   }, [dispatch]);
 
-  const handleToggleActive = async (index: number, id: number) => {
+  const handleToggleActive = async (index: number, id: string) => {
     try {
       await dispatch(ActiveBrandInActiveAction(id)).unwrap();
       setBrands((prev) =>
@@ -56,7 +57,7 @@ const BrandList = () => {
     setEditedNameAr(nameAr);
   };
 
-  const handleSaveEdit = async (index: number, id: number) => {
+  const handleSaveEdit = async (index: number, id: string) => {
     const formData = new FormData();
     formData.append('id', id.toString());
     formData.append('name', editedName);
@@ -73,7 +74,7 @@ const BrandList = () => {
     }
   };
 
-  const handleDelete = async (index: number, id: number) => {
+  const handleDelete = async (index: number, id: string) => {
     try {
       await dispatch(DeleteBrandAction(id)).unwrap();
       setBrands((prev) => prev.filter((_, i) => i !== index));
@@ -90,7 +91,33 @@ const BrandList = () => {
           <button className="px-4 py-2 bg-gray-200 border hover:bg-gray-100">Add New Brand</button>
         </Link>
       </div>
+      {error && (
+        <div className="w-full justify-center flex items-center">
+          <div className="flex items-center w-1/2 justify-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md animate-bounce">
+            <svg
+              className="w-6 h-6 mr-2 text-red-600 animate-pulse"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.054 0 1.99-.816 1.99-1.87V6.87C20.99 5.816 20.054 5 19 5H5c-1.054 0-1.99.816-1.99 1.87v8.26c0 1.054.936 1.87 1.99 1.87z"
+              />
+            </svg>
+            <p className="font-semibold">Failed to load services. Please try again later.</p>
+          </div>
+        </div>
+      )}
 
+      {brandLoading && (
+        <div className="flex justify-center py-4">
+          <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      )}
       {brands.map((brand, index) => (
         <div key={brand.id} className="grid grid-cols-6 border-t py-4 px-4">
           <div className="col-span-1 flex items-center">

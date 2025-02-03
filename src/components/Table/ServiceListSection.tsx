@@ -17,7 +17,7 @@ const ServiceListSection = () => {
   const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState<string | null>(null);
   const [editedService, setEditedService] = useState<Partial<Service>>({});
-  const { loading, error } = useSelector((state: RootState) => state.service);
+  const { serviceLoading, error } = useSelector((state: RootState) => state.service);
   const [detailedServiceId, setDetailedServiceId] = useState<string | null>(null); // State for detailed service ID
 
   useEffect(() => {
@@ -166,7 +166,7 @@ const ServiceListSection = () => {
         </div>
       )}
 
-      {loading && (
+      {serviceLoading && (
         <div className="flex justify-center py-4">
           <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>

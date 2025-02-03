@@ -3,6 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { AppDispatch, RootState } from "../../reduxKit/store";
+import { ISubService } from "../../interfaces/admin/subservices";
 import { 
   GetSubServiceAction, 
   EditSubServiceAction, 
@@ -12,23 +13,17 @@ import {
 } from "../../reduxKit/actions/auth/subService/subServiceAction";
 import { useSelector } from "react-redux";
 
-interface Service {
-  id: string;
-  name: string;
-  nameAr: string;
-  isActive: boolean;
-  description: string;
-  descriptionAr: string;
-}
+
 
 const SubService = () => {
-  const [newsubServices, setnewSubServices] = useState<Service[]>([]);
+  const [newsubServices, setnewSubServices] = useState<ISubService[]>([]);
   const [isEditing, setIsEditing] = useState<number | null>(null);
   const [editedName, setEditedName] = useState("");
   const [editedNameAr, setEditedNameAr] = useState("");
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const { loading, error } = useSelector((state: RootState) => state.subService);
+  const { subServiceLoading, error } = useSelector((state: RootState) => state.subService);
+
 
   useEffect(() => {
     const GetSubServiceList = async () => {
@@ -143,7 +138,7 @@ const SubService = () => {
         </div>
       )}
 
-      {loading && (
+      {subServiceLoading && (
         <div className="flex justify-center py-4">
           <div className="w-8 h-8 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
         </div>
