@@ -19,12 +19,11 @@ import BrandDetail from "./components/Table/BrandDetail";
 import SellerListSection from "./components/pages/seller/sellerList";
 import SellerProfile from "./components/Table/SellerProfile";
 import AddProduct from "./components/pages/product/AddProduct";
- 
-
 import UserList from "./components/pages/user-management/userDetails";
 import GetUserById from "./components/pages/user-management/getUserById";
 import AddRegion from "./components/pages/Form/AddRegion";
 import RegionListSection from "./components/Table/RegionListSection";
+import GetOffer from "./components/pages/offer-management/getOffer";
  
 
 export const App: React.FC = React.memo(() => {
@@ -156,6 +155,8 @@ export const App: React.FC = React.memo(() => {
 
               <Route path="/addregion" element={<AddRegion/>} />
               <Route path="/regionlist" element={<RegionListSection/>} />
+
+              <Route path="/getoffer" element={<GetOffer/>} />
 
             </Routes>
           </DefaultLayout>
