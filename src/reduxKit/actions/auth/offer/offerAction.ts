@@ -1,7 +1,4 @@
 import {axiosIn, configWithToken, configWithTokenMultiPart} from "../../../../config/constants";
-
-
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
@@ -10,7 +7,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
     async (__,{rejectWithValue})=>{
         try {
             console.log( "admin get user ");
-            const response = await axiosIn.get(`/admin/user`,configWithToken());
+            const response = await axiosIn.get(`/admin/offer?page=1&limit=10&verificationStatus=REJECTED&orderBy=asc`,configWithToken());
             return response.data.result.data; 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
@@ -20,7 +17,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
               return rejectWithValue({ message: "Something went wrong!" });
             }
           }
-    }
+    } 
   )
 
 
