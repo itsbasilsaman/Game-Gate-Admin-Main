@@ -34,10 +34,6 @@ const initialState:UserState  = {
 
 
 
-
-
-
-
 export const sellerSlice = createSlice({
   name: "user",
   initialState:initialState,

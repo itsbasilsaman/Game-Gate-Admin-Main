@@ -51,6 +51,7 @@ export const getSellerByIdAction = createAsyncThunk(
     }
   }
 );
+
 export const UpdateVerificationSellerAction = createAsyncThunk(
   "admin/UpdateVerificationSellerAction",
   async (data: IUpdateSellerStatus, { rejectWithValue }) => {
@@ -71,4 +72,4 @@ export const UpdateVerificationSellerAction = createAsyncThunk(
       }
     }
   }
-);
+
