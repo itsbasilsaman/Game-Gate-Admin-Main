@@ -12,9 +12,7 @@ import {
   DeleteSubServiceAction 
 } from "../../reduxKit/actions/auth/subService/subServiceAction";
 import { useSelector } from "react-redux";
-
-
-
+ 
 const SubService = () => {
   const [newsubServices, setnewSubServices] = useState<ISubService[]>([]);
   const [isEditing, setIsEditing] = useState<number | null>(null);
@@ -23,8 +21,7 @@ const SubService = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const { subServiceLoading, error } = useSelector((state: RootState) => state.subService);
-
-
+ 
   useEffect(() => {
     const GetSubServiceList = async () => {
       try {
