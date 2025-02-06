@@ -2,8 +2,8 @@ import {axiosIn, configWithToken, configWithTokenMultiPart} from "../../../../co
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
-  export const GetAllUOfferAction= createAsyncThunk(
-    "admin/getUsers",
+  export const GetAllOfferAction= createAsyncThunk(
+    "admin/getOffers",
     async (__,{rejectWithValue})=>{
         try {
             console.log( "admin get user ");

@@ -35,8 +35,6 @@ const ServiceListSection = () => {
     };
     GetServiceList();
   }, [dispatch]);
-
-
   const handleViewDetails = async (id: string) => {
     if (detailedServiceId === id) {
       setDetailedServiceId(null); // Collapse if already expanded
@@ -44,12 +42,10 @@ const ServiceListSection = () => {
       setDetailedServiceId(id); // Expand the selected service
     }
   };
-
   const handleDeleteClick = (id: string) => {
     setSelectedServiceId(id);
     setIsModalOpen(true);
   };
-
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -71,7 +67,7 @@ const ServiceListSection = () => {
     }
     setIsModalOpen(false);
   };
-
+  
   const handleEditClick = (service: Service) => {
     setIsEditing(service.id);
     setEditedService({ ...service });

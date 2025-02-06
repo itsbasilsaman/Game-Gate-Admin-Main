@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { FaEye, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -233,7 +234,7 @@ const GetOffer = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
               className="bg-white dark:bg-boxdark px-6 pt-12 rounded-lg w-full max-w-2xl overflow-y-auto max-h-[80%] flex flex-col justify-center relative"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}
             >
               <button
                 onClick={closeModal}
@@ -322,7 +323,7 @@ const GetOffer = () => {
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
               className="bg-white dark:bg-boxdark p-6 rounded-lg w-full max-w-2xl overflow-y-auto max-h-screen relative"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}
             >
               <button
                 onClick={closeModal}
