@@ -25,6 +25,7 @@ export  interface sellerUser {
     fcmToken: string;
     levelId: string;
     addressId: string | null;
+    isActive:boolean;
   }
   
  export interface SellerMain {

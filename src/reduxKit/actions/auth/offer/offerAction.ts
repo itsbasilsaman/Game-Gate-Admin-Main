@@ -3,12 +3,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
   export const GetAllOfferAction= createAsyncThunk(
-    "admin/getOffers",
+
+    "admin/getOffer",
+
     async (__,{rejectWithValue})=>{
         try {
             console.log( "admin get user ");
-            const response = await axiosIn.get(`/admin/offer?page=1&limit=10&verificationStatus=REJECTED&orderBy=asc`,configWithToken());
-            return response.data.result.data; 
+       const response = await axiosIn.get(`/admin/offer?page=1&limit=10&verificationStatus=REJECTED&orderBy=asc`,configWithToken());
+            return response.data; 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
             if (error.response && error.response.data) {

@@ -72,4 +72,4 @@ export const UpdateVerificationSellerAction = createAsyncThunk(
       }
     }
   }
-);
+
