@@ -1,20 +1,13 @@
 import {configWithTokenMultiPart,axiosIn, configWithToken} from "../../../../config/constants";
-
-
-
+ 
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
-
-
+ 
 export interface Iservice{
     name: string
     nameAr:string 
     icon:File|null
 }
-
-
-
-
+ 
 export const AddSubServiceAction= createAsyncThunk(
     "admin/addService",
     async (adminCredentials:FormData,{rejectWithValue})=>{
