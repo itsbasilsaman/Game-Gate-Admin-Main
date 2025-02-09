@@ -13,7 +13,6 @@ const SellerList = React.memo(() => {
   const [expandedSellerId, setExpandedSellerId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
   const dispatch = useDispatch<AppDispatch>();
   const { loading } = useSelector((state: RootState) => state.seller);
 
@@ -43,10 +42,8 @@ const SellerList = React.memo(() => {
     } else {
       try {
         const resultAction = await dispatch(getSellerByIdAction(id));
-
         if (getSellerByIdAction.fulfilled.match(resultAction)) {
           const sellerData = resultAction.payload?.data;
-
           if (sellerData) {
             setSellerDetails(sellerData);
             setExpandedSellerId(id);
@@ -78,7 +75,7 @@ const SellerList = React.memo(() => {
           // Refresh the seller list or update the specific seller's status
           const updatedSellers = sellers.map((seller) =>
             seller.userId === selectedUserId
-              ? { ...seller, verificationStatus: action === "ACCEPT" ? "FULLFILLED" : "REJECTED" }
+              ? { ...seller, verificationStatus: action === "ACCEPT" ? "APPROVED" : "REJECTED" }
               : seller
           );
           setSellers(updatedSellers);
@@ -138,7 +135,7 @@ const SellerList = React.memo(() => {
                 className={`px-4 py-2 rounded-full text-white ${
                   seller.verificationStatus === 'PENDING'
                     ? 'bg-orange-500'
-                    : seller.verificationStatus === 'FULLFILLED'
+                    : seller.verificationStatus === 'APPROVED'
                     ? 'bg-green-500'
                     : 'bg-red-500'
                 }`}

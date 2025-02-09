@@ -7,7 +7,6 @@ interface VerificationModalProps {
   onSubmit: (action: string, rejectionReason?: string) => void;
   userId: string;
 }
-
 const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, onSubmit, userId }) => {
   const [isAccepted, setIsAccepted] = useState<boolean>(false);
   const [rejectionReason, setRejectionReason] = useState<string>("");
@@ -16,7 +15,7 @@ const VerificationModal: React.FC<VerificationModalProps> = ({ isOpen, onClose, 
     if (!isAccepted && !rejectionReason) {
       alert("Please provide a reason for rejection.");
       return;
-    }
+    } 
     onSubmit(isAccepted ? "ACCEPT" : "REJECT", rejectionReason);
     onClose();
   };
