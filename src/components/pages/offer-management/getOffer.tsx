@@ -199,7 +199,7 @@ const GetOffer = () => {
                   {offer.product.description}
                 </p>
                 <p className="text-sm">
-                  <span className="text-[15px] font-medium">Description Arabic : </span>
+                  <span  className="text-[15px] font-medium">Description Arabic : </span>
                   {offer.product.descriptionAr}
                 </p>
               </div>

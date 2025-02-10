@@ -3,7 +3,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
   export const GetAllOfferAction= createAsyncThunk(
+
     "admin/getOffer",
+
     async (__,{rejectWithValue})=>{
         try {
             console.log( "admin get user ");
