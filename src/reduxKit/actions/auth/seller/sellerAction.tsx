@@ -56,20 +56,19 @@ export const UpdateVerificationSellerAction = createAsyncThunk(
   "admin/UpdateVerificationSellerAction",
   async (data: IUpdateSellerStatus, { rejectWithValue }) => {
     try {
-      const response = await axiosIn.post(
-        `/admin/seller/verify`,
-        data,
-        configWithToken()
-      );
-      console.log("the rsponse ofhtedata ", response);
+      const config = await configWithToken(); // Ensure this is awaited if async
+      const response = await axiosIn.post("/admin/seller/verify", data, config);
+      
+      console.log("The response of the data: ", response);
       return response.data;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.response && error.response.data) {
         return rejectWithValue(error.response.data.message);
-      } else {
-        return rejectWithValue({ message: "Something went wrong!" });
       }
+      return rejectWithValue("Something went wrong!");
     }
   }
+);
+
 
