@@ -63,33 +63,35 @@ const SellerList = React.memo(() => {
   };
 
   const handleVerification = async (action: string, rejectionReason?: string) => {
-    if (selectedUserId) {
-      try {
-        const resultAction = await dispatch(
-          UpdateVerificationSellerAction({
-            userId: selectedUserId,
-            action,
-            rejectionReason,
-          })
-        );
-
-        if (UpdateVerificationSellerAction.fulfilled.match(resultAction)) {
-          console.log("Verification status updated successfully:", resultAction.payload);
-          // Refresh the seller list or update the specific seller's status
-          const updatedSellers = sellers.map((seller) =>
+    if (!selectedUserId) return;
+  
+    try {
+      const resultAction = await dispatch(
+        UpdateVerificationSellerAction({
+          userId: selectedUserId,
+          action,
+          rejectionReason: rejectionReason ?? "", // Ensure rejectionReason is a string
+        })
+      );
+  
+      if (UpdateVerificationSellerAction.fulfilled.match(resultAction)) {
+        console.log("Verification status updated successfully:", resultAction.payload);
+  
+        setSellers((prevSellers) =>
+          prevSellers.map((seller) =>
             seller.userId === selectedUserId
-              ? { ...seller, verificationStatus: action === "ACCEPT" ? "FULLFILLED" : "REJECTED" }
+              ? { ...seller, verificationStatus: action === "ACCEPT" ? "FULFILLED" : "REJECTED" }
               : seller
-          );
-          setSellers(updatedSellers);
-        } else {
-          console.log("Failed to update verification status: ", resultAction.payload || resultAction.error);
-        }
-      } catch (error) {
-        console.error("Unexpected error while updating verification status: ", error);
+          )
+        );
+      } else {
+        console.log("Failed to update verification status: ", resultAction.payload || resultAction.error);
       }
+    } catch (error) {
+      console.error("Unexpected error while updating verification status: ", error);
     }
   };
+  
 
   if (loading) {
     return <Loading />;
