@@ -10,7 +10,7 @@ export interface ISeller {
 export interface IUpdateSellerStatus {
   userId: string;
   action: string;
-  rejectionReason: string;
+  rejectionReason: string|undefined;
 }
 
 export const getAllsellersAction = createAsyncThunk(
@@ -71,5 +71,7 @@ export const UpdateVerificationSellerAction = createAsyncThunk(
         return rejectWithValue({ message: "Something went wrong!" });
       }
     }
+
+  })
   }
-)
+

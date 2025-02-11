@@ -13,7 +13,6 @@ const SellerList = React.memo(() => {
   const [expandedSellerId, setExpandedSellerId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-
   const dispatch = useDispatch<AppDispatch>();
   const { loading } = useSelector((state: RootState) => state.seller);
 
@@ -43,10 +42,8 @@ const SellerList = React.memo(() => {
     } else {
       try {
         const resultAction = await dispatch(getSellerByIdAction(id));
-
         if (getSellerByIdAction.fulfilled.match(resultAction)) {
           const sellerData = resultAction.payload?.data;
-
           if (sellerData) {
             setSellerDetails(sellerData);
             setExpandedSellerId(id);
@@ -63,35 +60,33 @@ const SellerList = React.memo(() => {
   };
 
   const handleVerification = async (action: string, rejectionReason?: string) => {
-    if (!selectedUserId) return;
-  
-    try {
-      const resultAction = await dispatch(
-        UpdateVerificationSellerAction({
-          userId: selectedUserId,
-          action,
-          rejectionReason: rejectionReason ?? "", // Ensure rejectionReason is a string
-        })
-      );
-  
-      if (UpdateVerificationSellerAction.fulfilled.match(resultAction)) {
-        console.log("Verification status updated successfully:", resultAction.payload);
-  
-        setSellers((prevSellers) =>
-          prevSellers.map((seller) =>
-            seller.userId === selectedUserId
-              ? { ...seller, verificationStatus: action === "ACCEPT" ? "FULFILLED" : "REJECTED" }
-              : seller
-          )
+    if (selectedUserId) {
+      try {
+        const resultAction = await dispatch(
+          UpdateVerificationSellerAction({
+            userId: selectedUserId,
+            action,
+            rejectionReason,
+          })
         );
-      } else {
-        console.log("Failed to update verification status: ", resultAction.payload || resultAction.error);
+
+        if (UpdateVerificationSellerAction.fulfilled.match(resultAction)) {
+          console.log("Verification status updated successfully:", resultAction.payload);
+          // Refresh the seller list or update the specific seller's status
+          const updatedSellers = sellers.map((seller) =>
+            seller.userId === selectedUserId
+              ? { ...seller, verificationStatus: action === "ACCEPT" ? "APPROVED" : "REJECTED" }
+              : seller
+          );
+          setSellers(updatedSellers);
+        } else {
+          console.log("Failed to update verification status: ", resultAction.payload || resultAction.error);
+        }
+      } catch (error) {
+        console.error("Unexpected error while updating verification status: ", error);
       }
-    } catch (error) {
-      console.error("Unexpected error while updating verification status: ", error);
     }
   };
-  
 
   if (loading) {
     return <Loading />;
@@ -140,7 +135,7 @@ const SellerList = React.memo(() => {
                 className={`px-4 py-2 rounded-full text-white ${
                   seller.verificationStatus === 'PENDING'
                     ? 'bg-orange-500'
-                    : seller.verificationStatus === 'FULLFILLED'
+                    : seller.verificationStatus === 'APPROVED'
                     ? 'bg-green-500'
                     : 'bg-red-500'
                 }`}
