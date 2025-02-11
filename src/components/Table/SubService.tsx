@@ -12,7 +12,7 @@ import {
   DeleteSubServiceAction 
 } from "../../reduxKit/actions/auth/subService/subServiceAction";
 import { useSelector } from "react-redux";
- 
+
 const SubService = () => {
   const [newsubServices, setnewSubServices] = useState<ISubService[]>([]);
   const [isEditing, setIsEditing] = useState<number | null>(null);
@@ -36,12 +36,16 @@ const SubService = () => {
 
   const handleToggleActive = async (index: number, id: string) => {
     try {
-      await dispatch(ActiveInActiveSubServiceAction(id)).unwrap();
-      setnewSubServices((prev) =>
-        prev.map((item, i) =>
-          i === index ? { ...item, isActive: !item.isActive } : item
-        )
-      );
+      console.log("first active sug",id);
+      
+   const response=   await dispatch(ActiveInActiveSubServiceAction(id)).unwrap();
+   console.log("teh responsesuuuuuuuuuuuuuesebbbbbbbbbbbbbb ", response);
+  
+      // setnewSubServices((prev) =>
+      //   prev.map((item, i) =>
+      //     i === index ? { ...item, isActive: !item.isActive } : item
+      //   )
+      // );
     } catch (error) {
       console.error("Failed to toggle active status: ", error);
     }
@@ -76,6 +80,7 @@ const SubService = () => {
 
   const handleDelete = async (index: number, id: string) => {
     try {
+           console.log("before going to delete the subservice ",id);
       await dispatch(DeleteSubServiceAction(id)).unwrap();
       setnewSubServices((prev) => prev.filter((_, i) => i !== index));
     } catch (error) {
@@ -204,7 +209,7 @@ const SubService = () => {
                 subService.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
               }`}
             >
-              {subService.isActive ? "Active" : "Not Active"}
+              {subService.isActive ? "Active" : "Block"}
             </button>
           </div>
 
