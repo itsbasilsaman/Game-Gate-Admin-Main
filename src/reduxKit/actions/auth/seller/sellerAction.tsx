@@ -71,4 +71,7 @@ export const UpdateVerificationSellerAction = createAsyncThunk(
         return rejectWithValue({ message: "Something went wrong!" });
       }
     }
+
   })
+  }
+
