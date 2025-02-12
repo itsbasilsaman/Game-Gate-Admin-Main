@@ -33,7 +33,6 @@ const GetUserById: React.FC = () => {
       requiredTransactionsSR: 10,
     },
   };
-
   return (
     <div className="max-w-sm mx-auto bg-gradient-to-br from-black to-gray-400 shadow-2xl rounded-3xl p-8 text-center text-white relative overflow-hidden transform hover:scale-105 transition-transform duration-300">
       <div className="absolute top-0 left-0 w-full h-1/3  opacity-10 rounded-b-3xl"></div>
