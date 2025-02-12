@@ -16,7 +16,6 @@ type ProfileProps = {
     requiredTransactionsSR: number;
   };
 };
-
 const GetUserById: React.FC = () => {
   const profile: ProfileProps = {
     id: "da97179d-f72a-4029-ac8a-0d2c5b37b0da",
