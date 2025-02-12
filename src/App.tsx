@@ -41,7 +41,7 @@ export const App: React.FC = React.memo(() => {
       <Toaster position="top-center" />
       <Suspense fallback={<Loading />}>
         <Routes>
-          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/login"  element={isLogged ? <Navigate to="/"  /> :<AdminLogin />} />
         </Routes>
 
         {!isLoginRoute && isLogged && (
