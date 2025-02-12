@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const SubServiceForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { loading } = useSelector((state: RootState) => state.subService);
+  const { subServiceLoading } = useSelector((state: RootState) => state.subService);
   const [formState, setFormState] = useState<FormState>({
     name: "",
     nameAr: "",
@@ -145,9 +145,9 @@ const SubServiceForm: React.FC = () => {
                 <button
                   type="submit"
                   className="flex items-center justify-center w-full rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90 disabled:opacity-70"
-                  disabled={loading}
+                  disabled={subServiceLoading}
                 >
-                  {loading ? (
+                  {subServiceLoading ? (
                     <span className="relative flex h-5 w-5">
                       <span className="absolute inline-block h-full w-full animate-spin rounded-full border-[3px] border-white border-t-transparent"></span>
                     </span>
