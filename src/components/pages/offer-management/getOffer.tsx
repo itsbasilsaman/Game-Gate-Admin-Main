@@ -3,9 +3,10 @@ import { FaEye } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../reduxKit/store";
-import { GetAllOfferAction,UpdateStatusOfferAction } from "../../../reduxKit/actions/auth/offer/offerAction";
+import { GetAllOfferAction, UpdateStatusOfferAction } from "../../../reduxKit/actions/auth/offer/offerAction";
+import Modal from "./statusModal";
 
-// Define TypeScript interfaces
+ 
 interface Product {
   title: string;
   titleAr: string;
@@ -46,7 +47,7 @@ interface Seller {
 }
 
 interface Offer {
-  id:string
+  id: string;
   title: string;
   titleAr: string;
   description: string;
@@ -63,6 +64,11 @@ interface Offer {
 const GetOffer = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [offers, setOffers] = useState<Offer[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOfferId, setSelectedOfferId] = useState<string | null>(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [expandedProductIndex, setExpandedProductIndex] = useState<number | null>(null);
+  const [update, updateStatus] = useState<boolean>(false);
 
   useEffect(() => {
     const getOffers = async () => {
@@ -74,10 +80,7 @@ const GetOffer = () => {
       }
     };
     getOffers();
-  }, [dispatch]);
-
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [expandedProductIndex, setExpandedProductIndex] = useState<number | null>(null);
+  }, [dispatch, update]);
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -87,31 +90,31 @@ const GetOffer = () => {
     setExpandedProductIndex(expandedProductIndex === index ? null : index);
   };
 
-  console.log('12345', offers);
-  
+  const handleVerificationOffer = async (id: string) => {
+    setSelectedOfferId(id);
+    setIsModalOpen(true);
+  };
 
-
-  const handleVerificationOffer =async(idj:string)=>{
-    try {
-      console.log("if for hte data ",idj );
-      const obj={
-        status:"",
-        adminNote:"",
-        id:idj
-
+  const handleSaveStatus = async (status: string, adminNote: string) => {
+    if (selectedOfferId) {
+      const obj = {
+        status,
+        adminNote,
+        id: selectedOfferId,
+      };
+      try {
+        await dispatch(UpdateStatusOfferAction(obj));
+        updateStatus(true);
+      } catch (error) {
+        console.error(error);
       }
-      
-      
-    } catch (error) {
-      console.log(error);
-      
     }
-  }
+  };
 
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-4 w-full">
       <h4 className="text-xl font-semibold text-black dark:text-white mb-4">
-        Offer ListS
+        Offer Lists
       </h4>
 
       <div className="grid grid-cols-1 gap-4 w-full">
@@ -120,19 +123,25 @@ const GetOffer = () => {
             key={index}
             className="border border-stroke dark:border-strokedark p-4 rounded-lg"
           >
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-2 ">
               <h5 className="text-lg font-semibold"><span className="text-[18px] font-medium">Title : </span>{offer.title}</h5>
-              <button onClick={()=>handleVerificationOffer(offer?.id) } >Update Status</button>
+             
+            </div>
+            <div className="w-full flex flex-col md:flex-row justify-between gap-3">
+              <p className="text-sm text-gray-600"><span className="text-[16px] font-medium text-black">Arabic Title : </span>{offer.titleAr}</p>
+              <button
+                onClick={() => handleVerificationOffer(offer?.id)}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                Update Status
+              </button>
               <p
-                className={`text-sm font-semibold ${
-                  offer.isActive ? "text-green-600" : "text-red-600"
+                className={`text-sm font-semibold text-center lg:text-left ${
+                  offer.status == 'APPROVED' ? "text-green-600" : (offer.status == 'PENDING' ? 'text-orange-500' : "text-red-600")
                 }`}
               >
                 {offer.status}
               </p>
-            </div>
-            <div className="w-full flex justify-between">
-              <p className="text-sm text-gray-600"><span className="text-[16px] font-medium text-black">Arabic Title : </span>{offer.titleAr}</p>
               <button
                 onClick={() => toggleExpand(index)}
                 className="text-blue-600 hover:text-blue-800 flex justify-center items-center uppercase gap-1"
@@ -145,20 +154,20 @@ const GetOffer = () => {
 
             {expandedIndex === index && (
               <div className="mt-4">
-                <div className="flex w-full justify-between my-3">
+                <div className="flex flex-col md:flex-row w-full justify-between my-3">
                   <p className="text-sm"><span className="text-[16px] font-medium">Description : </span>{offer.description}</p>
                   <p className="text-sm"><span className="text-[16px] font-medium ">Arabic Description : </span>{offer.descriptionAr}</p>
                 </div>
-                <div className="flex w-full justify-between my-3">
+                <div className="flex flex-col md:flex-row w-full justify-between my-3">
                   <p className="text-sm"><span className="text-[16px] font-medium">Price : </span>${offer.unitPriceUSD}</p>
                   <p className="text-sm"><span className="text-[16px] font-medium">Min. Quantity : </span>{offer.minQty}</p>
                 </div>
-                <div className="flex w-full justify-between my-3">
+                <div className="flex flex-col md:flex-row w-full justify-between my-3">
                   <p className="text-sm">
-                  <span className="text-[16px] font-medium">Delivery Methods : </span>{offer.deliveryMethods.join(", ")}
+                    <span className="text-[16px] font-medium">Delivery Methods : </span>{offer.deliveryMethods.join(", ")}
                   </p>
                   <div
-                    className={`  px-3 py-1 font-semibold   ${
+                    className={`px-3 py-1 font-semibold ${
                       offer.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
                     }`}
                   >
@@ -167,189 +176,190 @@ const GetOffer = () => {
                 </div>
 
                 <div className="w-full flex flex-col gap-4">
-  <div className="w-full">
-    {/* Dynamically render "Product Details" heading */}
-    <h6 className="font-semibold text-center py-3 text-[20px]">
-      {offer.product ? "Product Details" : ""}
-    </h6>
+                  <div className="w-full">
+                    <h6 className="font-semibold text-center py-3 text-[20px]">
+                      {offer.product ? "Product Details" : ""}
+                    </h6>
 
-    {offer.product && (
-      <div
-        onClick={() => toggleProductExpand(index)}
-        className="cursor-pointer border p-5 rounded-lg mt-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-      >
-        <div className="flex justify-center items-center">
-          <img
-            src="https://images.hdqwalls.com/wallpapers/battlefield-4-game-wide.jpg"
-            alt={offer.product.title}
-            className="w-[300px] h-[300px] object-cover rounded-lg mb-4"
-          />
-        </div>
-        <p className="text-lg font-semibold text-center">
-          <span className="text-[18px] font-medium"> Title : </span>
-          {offer.product.title}
-        </p>
-        <p className="text-sm text-gray-600 text-center">
-          <span className="text-[15px] font-medium">Arabic Title : </span>
-          {offer.product.titleAr}
-        </p>
-        <div
-          className={`flex justify-center font-semibold items-center px-2 py-1 my-3 text-[20px] ${
-            offer.product.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
-          }`}
-        >
-          {offer.product.isActive ? "Active" : "Inactive"}
-        </div>
-      </div>
-    )}
-
-    <AnimatePresence>
-      {expandedProductIndex === index && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="overflow-hidden"
-        >
-          <div className="mt-4">
-            {offer.product && (
-              <div className="w-full flex justify-between">
-                <p className="text-sm mt-2">
-                  <span className="text-[15px] font-medium">Description : </span>
-                  {offer.product.description}
-                </p>
-                <p className="text-sm">
-                  <span  className="text-[15px] font-medium">Description Arabic : </span>
-                  {offer.product.descriptionAr}
-                </p>
-              </div>
-            )}
-
-            {/* Dynamically render "Brand Details" heading if brand exists */}
-            {offer.product.brand && (
-              <div className="mt-4">
-                <h6 className="font-semibold text-center uppercase">Brand Details</h6>
-                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
-                  <div className="flex items-center gap-4 justify-center">
-                    <img
-                      src={offer.product.brand.image}
-                      alt={offer.product.brand.name}
-                      className="w-[200px] h-[200px] object-cover rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-lg font-semibold text-center py-2">
-                      <span className="text-[15px] font-medium">Name : </span>
-                      {offer.product.brand.name}
-                    </p>
-                    <p className="text-sm text-gray-600 text-center">
-                      <span className="text-[15px] font-medium">Arabic Name : </span>
-                      {offer.product.brand.nameAr}
-                    </p>
-                  </div>
-                  <div className="flex justify-between py-2">
-                    <p className="text-sm mt-2">
-                      <span className="text-[15px] font-medium">Description : </span>
-                      {offer.product.brand.description}
-                    </p>
-                    <p className="text-sm">
-                      <span className="text-[15px] font-medium">Description Arabic : </span>
-                      {offer.product.brand.descriptionAr}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Dynamically render "Service Details" heading if service exists */}
-            {offer.product.service && (
-              <div className="mt-4">
-                <h6 className="font-semibold text-center uppercase pt-3">Service Details</h6>
-                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
-                  <div className="flex items-center justify-center">
-                    {offer.product.service.iconUrl && (
-                      <img
-                        src={offer.product.service.iconUrl}
-                        alt={offer.product.service.name}
-                        className="w-[200px] h-[200px] object-cover rounded-md"
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <p className="text-lg font-semibold text-center">
-                      <span className="text-[15px] font-medium">Name : </span>
-                      {offer.product.service.name}
-                    </p>
-                    <p className="text-sm text-gray-600 text-center">
-                      <span className="text-[15px] font-medium">Arabic Name : </span>
-                      {offer.product.service.nameAr}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Dynamically render "Sub Service Details" heading if subService exists */}
-            {offer.product.subService && (
-              <div className="mt-4">
-                <h6 className="font-semibold text-center uppercase pt-3">Sub Service Details</h6>
-                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
-                  <p className="text-lg font-semibold">
-                    <span className="text-[15px] font-medium">Name : </span>
-                    {offer.product.subService.name}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="text-[15px] font-medium">Arabic Name : </span>
-                    {offer.product.subService.nameAr}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-</div>
-<div className="w-full">
-                    <h6 className="font-semibold text-center py-3 text-[20px]">Seller Details</h6>
-                    <div className="border p-5 rounded-lg mt-2">
-                     <div className="flex justify-center items-center gap-[15px]
-                     ">
-                        <img
-                          src={offer.seller.profileImage}
-                          alt={offer.seller.firstName}
-                          className="w-16 h-16 rounded-full object-cover mb-2"
-                        />
-                       <div>
-                          <p className="text-lg font-semibold">{offer.seller.firstName} {offer.seller.lastName}</p>
-                          <p className="text-sm text-gray-600">{offer.seller.userName}</p>
-                       </div>
-                     </div>
-                     <div className="w-full flex justify-between items-center">
-                        <div className="flex flex-col  gap-2">
-                          <p className="text-sm"><span className="font-medium mr-2">Phone :</span>{offer.seller.phoneNumber}</p>
-                          <p className="text-sm"><span className="font-medium mr-2">Gender :</span>{offer.seller.gender}</p>
-                        </div>
-                        <div  className="flex flex-col  gap-2">
-                          <p className="text-sm"><span className="font-medium mr-2">Email :</span>{offer.seller.email}</p>
-                          <p className="text-sm"><span className="font-medium mr-2">Country :</span>{offer.seller.country}</p>
-                        </div>
-                     </div>
+                    {offer.product && (
                       <div
-                        className={`flex justify-center font-semibold items-center px-2 py-1 my-3  text-[20px]   ${
-                          offer.seller.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                        }`}
+                        onClick={() => toggleProductExpand(index)}
+                        className="cursor-pointer border p-5 rounded-lg mt-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        {offer.seller.isActive ? "Active" : "Inactive"}
+                        <div className="flex justify-center items-center">
+                          <img
+                            src="https://images.hdqwalls.com/wallpapers/battlefield-4-game-wide.jpg"
+                            alt={offer.product.title}
+                            className="w-[300px] h-[300px] object-cover rounded-lg mb-4"
+                          />
+                        </div>
+                        <p className="text-lg font-semibold text-center">
+                          <span className="text-[18px] font-medium"> Title : </span>
+                          {offer.product.title}
+                        </p>
+                        <p className="text-sm text-gray-600 text-center">
+                          <span className="text-[15px] font-medium">Arabic Title : </span>
+                          {offer.product.titleAr}
+                        </p>
+                        <div
+                          className={`flex justify-center font-semibold items-center px-2 py-1 my-3 text-[20px] ${
+                            offer.product.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                          }`}
+                        >
+                          {offer.product.isActive ? "Active" : "Inactive"}
+                        </div>
+                      </div>
+                    )}
+
+                    <AnimatePresence>
+                      {expandedProductIndex === index && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="mt-4">
+                            {offer.product && (
+                              <div className="w-full flex flex-col md:flex-row justify-between">
+                                <p className="text-sm mt-2">
+                                  <span className="text-[15px] font-medium">Description : </span>
+                                  {offer.product.description}
+                                </p>
+                                <p className="text-sm">
+                                  <span className="text-[15px] font-medium">Description Arabic : </span>
+                                  {offer.product.descriptionAr}
+                                </p>
+                              </div>
+                            )}
+
+                            {offer.product.brand && (
+                              <div className="mt-4">
+                                <h6 className="font-semibold text-center uppercase">Brand Details</h6>
+                                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
+                                  <div className="flex items-center gap-4 justify-center">
+                                    <img
+                                      src={offer.product.brand.image}
+                                      alt={offer.product.brand.name}
+                                      className="w-[200px] h-[200px] object-cover rounded-md"
+                                    />
+                                  </div>
+                                  <div>
+                                    <p className="text-lg font-semibold text-center py-2">
+                                      <span className="text-[15px] font-medium">Name : </span>
+                                      {offer.product.brand.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600 text-center">
+                                      <span className="text-[15px] font-medium">Arabic Name : </span>
+                                      {offer.product.brand.nameAr}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-col md:flex-row justify-between py-2">
+                                    <p className="text-sm mt-2">
+                                      <span className="text-[15px] font-medium">Description : </span>
+                                      {offer.product.brand.description}
+                                    </p>
+                                    <p className="text-sm">
+                                      <span className="text-[15px] font-medium">Description Arabic : </span>
+                                      {offer.product.brand.descriptionAr}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {offer.product.service && (
+                              <div className="mt-4">
+                                <h6 className="font-semibold text-center uppercase pt-3">Service Details</h6>
+                                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
+                                  <div className="flex items-center justify-center">
+                                    {offer.product.service.iconUrl && (
+                                      <img
+                                        src={offer.product.service.iconUrl}
+                                        alt={offer.product.service.name}
+                                        className="w-[200px] h-[200px] object-cover rounded-md"
+                                      />
+                                    )}
+                                  </div>
+                                  <div>
+                                    <p className="text-lg font-semibold text-center">
+                                      <span className="text-[15px] font-medium">Name : </span>
+                                      {offer.product.service.name}
+                                    </p>
+                                    <p className="text-sm text-gray-600 text-center">
+                                      <span className="text-[15px] font-medium">Arabic Name : </span>
+                                      {offer.product.service.nameAr}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+
+                            {offer.product.subService && (
+                              <div className="mt-4">
+                                <h6 className="font-semibold text-center uppercase pt-3">Sub Service Details</h6>
+                                <div className="border p-4 rounded-lg mt-2 bg-gray-50 dark:bg-gray-700">
+                                  <p className="text-lg font-semibold">
+                                    <span className="text-[15px] font-medium">Name : </span>
+                                    {offer.product.subService.name}
+                                  </p>
+                                  <p className="text-sm text-gray-600">
+                                    <span className="text-[15px] font-medium">Arabic Name : </span>
+                                    {offer.product.subService.nameAr}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+                <div className="w-full">
+                  <h6 className="font-semibold text-center py-3 text-[20px]">Seller Details</h6>
+                  <div className="border p-5 rounded-lg mt-2">
+                    <div className="flex justify-center items-center gap-[15px]">
+                      <img
+                        src={offer.seller.profileImage}
+                        alt={offer.seller.firstName}
+                        className="w-16 h-16 rounded-full object-cover mb-2"
+                      />
+                      <div>
+                        <p className="text-lg font-semibold">{offer.seller.firstName} {offer.seller.lastName}</p>
+                        <p className="text-sm text-gray-600">{offer.seller.userName}</p>
                       </div>
                     </div>
+                    <div className="w-full flex flex-col md:flex-row justify-between items-center">
+                      <div className="flex flex-col gap-2">
+                        <p className="text-sm"><span className="font-medium mr-2">Phone :</span>{offer.seller.phoneNumber}</p>
+                        <p className="text-sm"><span className="font-medium mr-2">Gender :</span>{offer.seller.gender}</p>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <p className="text-sm"><span className="font-medium mr-2">Email :</span>{offer.seller.email}</p>
+                        <p className="text-sm"><span className="font-medium mr-2">Country :</span>{offer.seller.country}</p>
+                      </div>
+                    </div>
+                    <div
+                      className={`flex justify-center font-semibold items-center px-2 py-1 my-3 text-[20px] ${
+                        offer.seller.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                      }`}
+                    >
+                      {offer.seller.isActive ? "Active" : "Inactive"}
+                    </div>
                   </div>
+                </div>
               </div>
             )}
           </div>
         ))}
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveStatus}
+      />
     </div>
   );
 };

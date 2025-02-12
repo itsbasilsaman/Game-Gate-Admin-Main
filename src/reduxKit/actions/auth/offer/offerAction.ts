@@ -37,6 +37,7 @@ export const UpdateStatusOfferAction= createAsyncThunk(
             status:data.status,
             adminNote:data.adminNote
           }
+          console.log("Sending payload:", mydata);
             const response = await axiosIn.post(`/admin/offer/update-status/${data.id}`,mydata,configWithToken());
             console.log("the response get tyhe unban data is ", response);
             return response.data.data;

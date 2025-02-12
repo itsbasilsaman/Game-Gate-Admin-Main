@@ -9,4 +9,4 @@ export interface Service {
     updatedAt: string;
     deletedAt: string | null;
     isActive: boolean;
-  }
+}
