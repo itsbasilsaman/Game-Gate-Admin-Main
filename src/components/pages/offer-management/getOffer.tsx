@@ -3,7 +3,7 @@ import { FaEye } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../reduxKit/store";
-import { GetAllOfferAction } from "../../../reduxKit/actions/auth/offer/offerAction";
+import { GetAllOfferAction,UpdateStatusOfferAction } from "../../../reduxKit/actions/auth/offer/offerAction";
 
 // Define TypeScript interfaces
 interface Product {
@@ -46,6 +46,7 @@ interface Seller {
 }
 
 interface Offer {
+  id:string
   title: string;
   titleAr: string;
   description: string;
@@ -89,10 +90,28 @@ const GetOffer = () => {
   console.log('12345', offers);
   
 
+
+  const handleVerificationOffer =async(idj:string)=>{
+    try {
+      console.log("if for hte data ",idj );
+      const obj={
+        status:"",
+        adminNote:"",
+        id:idj
+
+      }
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark p-4 w-full">
       <h4 className="text-xl font-semibold text-black dark:text-white mb-4">
-        Offer List
+        Offer ListS
       </h4>
 
       <div className="grid grid-cols-1 gap-4 w-full">
@@ -103,6 +122,7 @@ const GetOffer = () => {
           >
             <div className="flex justify-between items-center mb-2">
               <h5 className="text-lg font-semibold"><span className="text-[18px] font-medium">Title : </span>{offer.title}</h5>
+              <button onClick={()=>handleVerificationOffer(offer?.id) } >Update Status</button>
               <p
                 className={`text-sm font-semibold ${
                   offer.isActive ? "text-green-600" : "text-red-600"
