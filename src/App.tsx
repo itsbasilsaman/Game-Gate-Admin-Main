@@ -23,6 +23,8 @@ import GetUserById from "./components/pages/user-management/getUserById";
 import AddRegion from "./components/pages/Form/AddRegion";
 import RegionListSection from "./components/Table/RegionListSection";
 import GetOffer from "./components/pages/offer-management/getOffer";
+import ProductListSection from "./components/pages/product/productList";
+import ProductItem from "./components/pages/product/productListItem";
 
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
@@ -59,8 +61,10 @@ export const App: React.FC = React.memo(() => {
               <Route path="/brand-detail" element={<BrandDetail />} />
               <Route path="/servicelistsection" element={<ServiceListSection />} />
               <Route path="/userlist" element={<UserList />} />
-              <Route path="/getuser" element={<GetUserById />} />
+              <Route path="/getuser/:userId" element={<GetUserById />} />
               <Route path="/addProduct" element={<AddProduct />} />
+              <Route path="/productList" element={<ProductListSection/>} />
+              <Route path="/productList/:id" element={<ProductItem/>} />
               <Route path="/subservice" element={<SubService />} />
               <Route path="/addregion" element={<AddRegion />} />
               <Route path="/regionlist" element={<RegionListSection />} />

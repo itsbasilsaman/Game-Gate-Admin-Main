@@ -91,10 +91,11 @@ const UserList = () => {
                 user.isActive ? "bg-red-400 text-white" : "bg-green-500 text-white"
               }`}
             >
+
               {user.isActive ? "Ban The User" : "Unban The User"}
             </button>
             <Link
-              to={`/user/${user.id}`}
+              to={`/getuser/${user.id}`}
               onClick={() => dispatch(GetUserByIdAction(user.id))}
               className="px-3 py-1 bg-blue-500 text-white rounded text-sm md:text-base hover:bg-blue-700"
             >
