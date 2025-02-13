@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { GetUserByIdAction } from "../../../reduxKit/actions/auth/users/userManagmentAction";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { AppDispatch } from "../../../reduxKit/store";
 
 type ProfileProps = {
   id: string;
@@ -9,6 +13,11 @@ type ProfileProps = {
   userName: string;
   gender: string;
   profileImage: string | null;
+  successfulDeliveries: number;
+  createdAt: string;
+  lastLogin: string;
+  updatedAt: string;
+  isActive:boolean;
   level: {
     id: string;
     level: number;
@@ -16,53 +25,98 @@ type ProfileProps = {
     requiredTransactionsSR: number;
   };
 };
+
 const GetUserById: React.FC = () => {
-  const profile: ProfileProps = {
-    id: "da97179d-f72a-4029-ac8a-0d2c5b37b0da",
-    firstName: "Najib",
-    lastName: "Nj",
-    email: "najibpt89@gmail.com",
-    phoneNumber: "+918921992380",
-    userName: "userName3",
-    gender: "MALE",
-    profileImage: 'https://static.vecteezy.com/system/resources/previews/000/574/512/original/vector-sign-of-user-icon.jpg',
-    level: {
-      id: "bea36778-8d2b-4d88-a064-db1402d92c92",
-      level: 1,
-      requiredTransactionsUSD: 0,
-      requiredTransactionsSR: 10,
-    },
-  };
-  return (
-    <div className="max-w-sm mx-auto bg-gradient-to-br from-black to-gray-400 shadow-2xl rounded-3xl p-8 text-center text-white relative overflow-hidden transform hover:scale-105 transition-transform duration-300">
-      <div className="absolute top-0 left-0 w-full h-1/3  opacity-10 rounded-b-3xl"></div>
-      <div className="relative z-10">
-        <div className="relative">
-          <img
-            src={
-              profile.profileImage ||
-              "https://via.placeholder.com/150?text=Profile+Image"
-            }
-            alt="Profile"
-            className="w-28 h-28 mx-auto rounded-full border-4 border-white shadow-lg"
-          />
-        </div>
-        <h2 className="text-2xl font-extrabold mt-4">{profile.firstName} {profile.lastName}</h2>
-        <p className="text-gray-300 text-sm">@{profile.userName}</p>
-        <p className="text-gray-300 text-sm">{profile.email}</p>
-        <p className="text-gray-300 text-sm capitalize">{profile.gender.toLowerCase()}</p>
-        <p className="mt-4 text-green-300 font-bold text-lg">{profile.phoneNumber}</p>
-        <p className="text-sm text-gray-300">
-            Transactions: ${profile.level.requiredTransactionsUSD} / {profile.level.requiredTransactionsSR} SR
-          </p>
-        <div className="mt-4 text-gray-200 bg-white bg-opacity-20 rounded-lg p-4 shadow-lg">
-          <p className="text-lg font-bold">Level {profile.level.level}</p>
-         
-        </div>
-        
+  const [profile, setProfile] = useState<ProfileProps | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const { userId } = useParams<{ userId: string }>();
+
+
+  const formattedDate = (isoString: string) :string => {
+    const date = new Date(isoString);
+    return date.toLocaleString("en-GB", {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour : 'numeric',
+      minute: 'numeric'
+    })
+  }
+
+  useEffect(() => {
+    const getUserByIds = async () => {
+      if (!userId) return;
+      try {
+        const response = await dispatch(GetUserByIdAction(userId));
+        console.log("Fetched User Data:", response.payload.data);
+        setProfile(response.payload.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getUserByIds();
+  }, [dispatch, userId]);
+
+  if (!profile) {
+    return  (
+      <div className="flex justify-center items-center w-full h-full">
+      <div className="relative w-12 h-12">
+        {/* Spinning Ring */}
+        <div className="w-full h-full border-4 border-transparent border-t-blue-900 border-r-blue-900 rounded-full animate-spin"></div>
+        {/* Inner Glow Effect */}
+        <div className="absolute top-5 left-2 w-12 h-12 bg-blue-900 opacity-20 rounded-full blur-lg"></div>
       </div>
     </div>
-  );
+    )
+  }
+
+  return (
+ 
+  <div className="max-w-5xl mx-auto p-8 flex flex-col lg:flex-row items-center gap-8">
+    {/* Profile Image & Name Section */}
+    <div className="flex flex-col items-center text-center w-full">
+      <img
+        src={
+          profile.profileImage ||
+          "https://via.placeholder.com/150?text=Profile+Image"
+        }
+        alt="Profile"
+        className="w-36 h-36 rounded-full border-4 object-cover border-gray-300 shadow-lg"
+      />
+      <h2 className="text-3xl font-extrabold mt-4">
+        {profile.firstName} {profile.lastName}
+      </h2>
+      <p className="text-gray-500 text-sm"><strong>username </strong>{profile.userName}</p>
+    </div>
+
+    {/* Profile Details Section */}
+    <div className="flex flex-col w-full gap-6 text-gray-700">
+      <h3 className="text-lg font-bold w-full text-center text-black">Profile Details</h3>
+      <p><strong>Email</strong> {profile.email}</p>
+      <p><strong>Phone Number</strong> {profile.phoneNumber}</p>
+      <p><strong>Gender</strong> {profile.gender}</p>
+      <p><strong>Successful Deliveries</strong> {profile.successfulDeliveries}</p>
+      <p><strong>Create at</strong>  {formattedDate(profile.createdAt)}</p>
+      <p><strong>Last Login</strong> {formattedDate(profile.lastLogin)}</p>
+      <p><strong>Updated at</strong> {formattedDate(profile.updatedAt)}</p>
+      <button
+      className={`px-4 py-2 text-white rounded-md transition-all duration-300 ${
+        profile.isActive ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"
+      }`}
+     
+    >
+      {profile.isActive ? "Active User" : "Inactive User"}
+    </button>
+      {/* Level Information */}
+      <h3 className="text-lg font-bold mt-4 w-full text-center text-black">User Level</h3>
+      <p><strong>Level:</strong> {profile.level.level}</p>
+      <p><strong>Required Transactions (USD):</strong> {profile.level.requiredTransactionsUSD}</p>
+      <p><strong>Required Transactions (SR):</strong> {profile.level.requiredTransactionsSR}</p>
+    </div>
+  </div>
+);
+
+ 
 };
 
 export default GetUserById;
