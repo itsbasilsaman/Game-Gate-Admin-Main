@@ -1,4 +1,4 @@
-import {axiosIn, configWithToken, configWithTokenMultiPart} from "../../../../config/constants";
+import {axiosIn, configWithToken,configWithTokenk} from "../../../../config/constants";
 
 
 
@@ -30,9 +30,10 @@ export const BanUserAction= createAsyncThunk(
     async (id:string,{rejectWithValue})=>{ 
 
         console.log("my ban id is ", id );
+        // const data="cfed79be-84c1-44f5-a344-e9618002b426"
         
         try {
-            const response = await axiosIn.post(`/admin/user/ban/${id}`,configWithTokenMultiPart());
+            const response = await axiosIn.post(`/admin/user/ban/${id}`,configWithTokenk());
             console.log("the response get tyhe service data is ", response);
             return response.data.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,7 +50,7 @@ export const UnBanUserAction= createAsyncThunk(
     "admin/UnBanUserAction",
     async (id:string,{rejectWithValue})=>{ 
         try {
-            const response = await axiosIn.post(`/admin/user/unban/${id}`,configWithTokenMultiPart());
+            const response = await axiosIn.post(`/admin/user/unban/${id}`,configWithToken());
             console.log("the response get tyhe unban data is ", response);
             return response.data.data;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
