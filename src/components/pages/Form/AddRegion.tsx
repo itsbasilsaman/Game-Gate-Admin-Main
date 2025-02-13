@@ -159,6 +159,7 @@ const AddRegion: React.FC = () => {
                             className="text-sm text-red-500 hover:underline"
                             onClick={handleDeleteImage}
                           >
+                            
                             Delete
                           </button>
                           <button
