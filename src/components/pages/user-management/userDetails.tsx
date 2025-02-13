@@ -88,10 +88,10 @@ const UserList = () => {
             <button
               onClick={() => handleToggleBan(user.id, user.isActive)}
               className={`px-3 py-1 rounded text-sm md:text-base transition-all ${
-                user.isActive ? "bg-red-500 text-white" : "bg-green-500 text-white"
+                user.isActive ? "bg-red-400 text-white" : "bg-green-500 text-white"
               }`}
             >
-              {user.isActive ? "Ban" : "Unban"}
+              {user.isActive ? "Ban The User" : "Unban The User"}
             </button>
             <Link
               to={`/user/${user.id}`}
