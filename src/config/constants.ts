@@ -48,4 +48,18 @@ export const configWithToken = () => {
     };
   };
   
+export const configWithTokenk = () => {
+  let token = Cookies.get("accessToken");
+  // const  myfd="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkNmQxYWFkMi0wNjVjLTQ5OTMtODBjZS1jNzU5MjQzNTkxYmMiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MzgzOTI3MTJ9.PL5RnndgwAbUEcEppIZl-_RDwl_dIp0vQY0TjVHM6WA"
+  token = token ? token.replace(/^"|"$/g, "").trim() : undefined; // Set undefined instead of null
+    console.log("MY token in adminside now :", token);
+    return {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : undefined, // Explicitly handle undefined
+      },
+   
+    };
+  };
+  
 
