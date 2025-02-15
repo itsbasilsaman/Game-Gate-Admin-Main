@@ -25,6 +25,7 @@ const DarkModeSwitcher = () => {
         >
           <span className="dark:hidden">
             <svg
+            
               width="16"
               height="16"
               viewBox="0 0 16 16"
