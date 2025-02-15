@@ -64,10 +64,12 @@ export const RegionSlice = createSlice({
       })
        
       .addCase(DeleteRegionAction.fulfilled, (state, { payload }) => {
+        console.log(payload);
+        
         state.loading = false;
         state.error = null;
         state.Serviceid=null
-        state.userData = payload;
+     
       })
       .addCase(DeleteRegionAction.rejected, (state, { payload }) => {
         state.loading = false;
