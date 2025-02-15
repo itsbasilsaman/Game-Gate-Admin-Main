@@ -67,6 +67,26 @@ export const GetProductAction= createAsyncThunk(
     }
   )
 
+
+export const GetProductById = createAsyncThunk(
+  "admin/getProductId",
+  async (id:string, {rejectWithValue}) => {
+    try {
+      const response = await axiosIn.get(`/admin/products/${id}`, configWithToken());
+      return response.data.data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+     if(error.response && error.response.data){
+      return rejectWithValue(error.response.data)
+     } else {
+      return rejectWithValue({message: 'Something went wrong!'})
+     }
+    }
+  }
+)
+
+
+ 
 export const GetSubServiceByIdAction= createAsyncThunk(
     "admin/getServiceById",
     async (id:string,{rejectWithValue})=>{ 

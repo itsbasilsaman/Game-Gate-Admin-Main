@@ -81,6 +81,8 @@ const GetOffer = () => {
     };
     getOffers();
   }, [dispatch, update]);
+ 
+
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
@@ -188,7 +190,7 @@ const GetOffer = () => {
                       >
                         <div className="flex justify-center items-center">
                           <img
-                            src="https://images.hdqwalls.com/wallpapers/battlefield-4-game-wide.jpg"
+                            src={offer.product.image}
                             alt={offer.product.title}
                             className="w-[300px] h-[300px] object-cover rounded-lg mb-4"
                           />
