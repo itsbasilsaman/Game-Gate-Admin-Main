@@ -28,11 +28,11 @@ import ProductItem from "./components/pages/product/productListItem";
 
 export const App: React.FC = React.memo(() => {
   const { isLogged } = useSelector((state: RootState) => state.auth);
-  console.log('Check if the user is logged in: ', isLogged);
-
   const location = useLocation();
   const isLoginRoute = location.pathname === "/admin/login";
-
+  
+  
+  console.log('Check if the user is logged in: ', isLogged);
   // Redirect to login page if user is not logged in
   if (!isLogged && !isLoginRoute) {
     return <Navigate to="/admin/login" replace />;
