@@ -9,7 +9,7 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onDelete, message }) => {
-  const {loading}=useSelector((state:RootState)=>state.service)
+  const {serviceLoading}=useSelector((state:RootState)=>state.service)
   if (!isOpen) return null;
 
   return (
@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, onDelete, message }) => 
             Cancel
           </button>
           <button onClick={onDelete} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-          {loading ? (
+          {serviceLoading ? (
   <div className="flex items-center gap-2">
     <svg
       className="animate-spin h-4 w-4 text-white"

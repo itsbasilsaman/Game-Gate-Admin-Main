@@ -34,7 +34,7 @@ const SubService = () => {
     GetSubServiceList();
   }, [dispatch]);
 
-  const handleToggleActive = async (index: number, id: string) => {
+  const handleToggleActive = async ( id: string) => {
     try {
       console.log("first active sug",id);
       
@@ -204,7 +204,7 @@ const SubService = () => {
 
           <div className="hidden sm:flex col-span-1 items-center">
             <button
-              onClick={() => handleToggleActive(index, subService.id)}
+              onClick={() => handleToggleActive( subService.id)}
               className={`px-3 py-1 rounded text-sm md:text-base ${
                 subService.isActive ? "bg-green-500 text-white" : "bg-red-500 text-white"
               }`}

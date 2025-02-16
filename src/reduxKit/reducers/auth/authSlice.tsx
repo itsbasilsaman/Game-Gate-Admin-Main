@@ -64,7 +64,6 @@ export const userLanguageSlice = createSlice({
         console.log("Payload after language change:", payload);
         state.loading = false;
         state.error = null;
-       
         state.userLanguage = payload;
         localStorage.setItem("userLanguage", JSON.stringify(state.userLanguage));
       })
