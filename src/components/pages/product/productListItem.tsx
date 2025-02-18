@@ -19,6 +19,7 @@ const ProductItem = () => {
       } catch (error) {
         console.error(error);
       }
+
     };
     getProductById();
   }, [dispatch, id]);
@@ -28,6 +29,8 @@ const ProductItem = () => {
     <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-900 rounded-full animate-spin"></div>
   </div>; // Show a loading state while data is being fetched
   }
+
+  
 
   return (
     <div className="container mx-auto p-4">
